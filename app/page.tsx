@@ -809,119 +809,122 @@ export default function Home() {
                 )}
               </div>
             </section>
-            <section
-              id="restaurant-results"
-              className="results shell"
-              aria-busy={loading}
-            >
-              <p className="sr-only" role="status">
-                {loading
-                  ? locale === "he"
-                    ? "מחפשים מסעדות…"
-                    : "Searching for restaurants…"
-                  : `${places.length} ${t.results}`}
-              </p>
-              <div className="section-heading">
-                <div>
-                  <p className="eyebrow">{t.browse}</p>
-                  <h2>
-                    {t.near}
-                    <span className="count">{places.length}</span>
-                  </h2>
-                </div>
-                <span className="result-note">
-                  <span className="google-attribution" translate="no">
-                    Google Maps
-                  </span>{" "}
-                  · {t.distance}
-                </span>
-              </div>
-              {loading ? (
-                <p role="status">
-                  {locale === "he"
-                    ? "מחפשים מסעדות…"
-                    : "Searching for restaurants…"}
+            {center && (
+              <section
+                id="restaurant-results"
+                className="results shell"
+                aria-busy={loading}
+              >
+                <p className="sr-only" role="status">
+                  {loading
+                    ? locale === "he"
+                      ? "מחפשים מסעדות…"
+                      : "Searching for restaurants…"
+                    : `${places.length} ${t.results}`}
                 </p>
-              ) : places.length ? (
-                <div className="restaurant-grid">
-                  {places.map((p) => (
-                    <button
-                      key={p.id}
-                      className="restaurant-card"
-                      onClick={() => {
-                        setWinner(p);
-                        setRandomResult(false);
-                      }}
-                      aria-label={`${p.name[locale]}, ${t[p.status === "open" ? "open" : p.status === "closed" ? "closed" : "unknown"]}`}
-                    >
-                      <div className={`food-panel ${p.color}`}>
-                        <FoodArt kind={p.food} />
-                        <span className="food-label">{t.illustration}</span>
-                        <span className="card-arrow">
-                          <ArrowUpRight size={18} />
-                        </span>
-                      </div>
-                      <div className="card-body">
-                        <div className="card-title">
-                          <h3>{p.name[locale]}</h3>
-                          <span className="price">
-                            {p.price ? "₪".repeat(p.price) : ""}
+                <div className="section-heading">
+                  <div>
+                    <p className="eyebrow">{t.browse}</p>
+                    <h2>
+                      {t.near}
+                      <span className="count">{places.length}</span>
+                    </h2>
+                  </div>
+                  <span className="result-note">
+                    <span className="google-attribution" translate="no">
+                      Google Maps
+                    </span>{" "}
+                    · {t.distance}
+                  </span>
+                </div>
+                {loading ? (
+                  <p role="status">
+                    {locale === "he"
+                      ? "מחפשים מסעדות…"
+                      : "Searching for restaurants…"}
+                  </p>
+                ) : places.length ? (
+                  <div className="restaurant-grid">
+                    {places.map((p) => (
+                      <button
+                        key={p.id}
+                        className="restaurant-card"
+                        onClick={() => {
+                          setWinner(p);
+                          setRandomResult(false);
+                        }}
+                        aria-label={`${p.name[locale]}, ${t[p.status === "open" ? "open" : p.status === "closed" ? "closed" : "unknown"]}`}
+                      >
+                        <div className={`food-panel ${p.color}`}>
+                          <FoodArt kind={p.food} />
+                          <span className="food-label">{t.illustration}</span>
+                          <span className="card-arrow">
+                            <ArrowUpRight size={18} />
                           </span>
                         </div>
-                        {p.attributions?.map((a, i) => (
-                          <small key={i}>{a.provider}</small>
-                        ))}
-                        <p>
-                          {p.cuisine === "all" ? t.restaurant : t[p.cuisine]}
-                          <span>·</span>
-                          {new Intl.NumberFormat(locale, {
-                            maximumFractionDigits: 1,
-                          }).format(distanceKm(center!, p.point))}{" "}
-                          {t.km}
-                        </p>
-                        <span className={`place-status ${p.status}`}>
-                          <i />
-                          {
-                            t[
-                              p.status === "open"
-                                ? "open"
-                                : p.status === "closed"
-                                  ? "closed"
-                                  : "unknown"
-                            ]
-                          }
-                        </span>
-                      </div>
+                        <div className="card-body">
+                          <div className="card-title">
+                            <h3>{p.name[locale]}</h3>
+                            <span className="price">
+                              {p.price ? "₪".repeat(p.price) : ""}
+                            </span>
+                          </div>
+                          {p.attributions?.map((a, i) => (
+                            <small key={i}>{a.provider}</small>
+                          ))}
+                          <p>
+                            {p.cuisine === "all" ? t.restaurant : t[p.cuisine]}
+                            <span>·</span>
+                            {new Intl.NumberFormat(locale, {
+                              maximumFractionDigits: 1,
+                            }).format(distanceKm(center!, p.point))}{" "}
+                            {t.km}
+                          </p>
+                          <span className={`place-status ${p.status}`}>
+                            <i />
+                            {
+                              t[
+                                p.status === "open"
+                                  ? "open"
+                                  : p.status === "closed"
+                                    ? "closed"
+                                    : "unknown"
+                              ]
+                            }
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : error ? null : (
+                  <div className="empty">
+                    <Search size={36} />
+                    <h3>{center ? t.empty : t.pickLocation}</h3>
+                    <p>{center ? t.emptyBody : t.locationPlaceholder}</p>
+                    <button
+                      className="secondary"
+                      onClick={() => {
+                        if (!center) {
+                          document.getElementById("area")?.focus();
+                          return;
+                        }
+                        invalidate();
+                        setRefresh((value) => value + 1);
+                        setRadius(3);
+                        setCuisine("all");
+                      }}
+                    >
+                      {center ? t.reset : t.locationSearch}
                     </button>
-                  ))}
-                </div>
-              ) : error ? null : (
-                <div className="empty">
-                  <Search size={36} />
-                  <h3>{center ? t.empty : t.pickLocation}</h3>
-                  <p>{center ? t.emptyBody : t.locationPlaceholder}</p>
-                  <button
-                    className="secondary"
-                    onClick={() => {
-                      if (!center) {
-                        document.getElementById("area")?.focus();
-                        return;
-                      }
-                      invalidate();
-                      setRefresh((value) => value + 1);
-                      setRadius(3);
-                      setCuisine("all");
-                    }}
-                  >
-                    {center ? t.reset : t.locationSearch}
-                  </button>
-                </div>
-              )}
-              <p className="disclaimer">
-                <span>ⓘ</span>
-                {t.disclaimer}
-              </p>
-            </section>
+                  </div>
+                )}
+                <p className="disclaimer">
+                  <span>ⓘ</span>
+                  {t.disclaimer}
+                </p>
+              </section>
+            )}
+
             <section className="play-banner shell">
               <div className="banner-art" aria-hidden="true">
                 <span>✦</span>

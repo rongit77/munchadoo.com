@@ -23,7 +23,7 @@ ln -s "$ROOT/node_modules" "$BUILD/node_modules"
 (cd "$BUILD" && NEXT_TELEMETRY_DISABLED=1 npm run build -- --webpack)
 RELEASE="$(date -u +%Y%m%dT%H%M%SZ)-$$"
 # Only runtime files; never send credentials, environment files or local dependencies.
-COPYFILE_DISABLE=1 tar -czf "$BUILD/release.tgz" -C "$BUILD" --exclude='.next/cache' --exclude='.next/diagnostics' --exclude='.next/trace*' .next public app.js package.json package-lock.json
+COPYFILE_DISABLE=1 tar -czf "$BUILD/release.tgz" -C "$BUILD" --exclude='public/previews' --exclude='.next/cache' --exclude='.next/diagnostics' --exclude='.next/trace*' .next public app.js package.json package-lock.json
 "${SSH[@]}" "mkdir -p ~/munchadoo-releases/$RELEASE && cat > ~/munchadoo-releases/$RELEASE/release.tgz" < "$BUILD/release.tgz"
 "${SSH[@]}" bash -s -- "$RELEASE" <<'REMOTE'
 set -euo pipefail
