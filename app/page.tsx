@@ -210,7 +210,10 @@ export default function Home() {
       };
       timeoutRef.current = setTimeout(
         show,
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 850,
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+          document.documentElement.hasAttribute("data-reduce-motion")
+          ? 0
+          : 850,
       );
       pendingResult.current = show;
     } catch {
@@ -244,7 +247,7 @@ export default function Home() {
   }
   const Arrow = locale === "he" ? ChevronLeft : ChevronRight;
   return (
-    <main>
+    <div className="app">
       <header className="header">
         <div className="shell header-inner">
           <button
@@ -259,6 +262,7 @@ export default function Home() {
           <nav aria-label={t.mainNav}>
             <button
               className={view === "discover" ? "nav-item active" : "nav-item"}
+              aria-current={view === "discover" ? "page" : undefined}
               onClick={() => setView("discover")}
             >
               <Compass size={17} />
@@ -266,6 +270,7 @@ export default function Home() {
             </button>
             <button
               className={view === "play" ? "nav-item active" : "nav-item"}
+              aria-current={view === "play" ? "page" : undefined}
               onClick={showGames}
             >
               <Gamepad2 size={18} />
@@ -291,487 +296,503 @@ export default function Home() {
         <span className="strip-divider">/</span>
         <span>{t.strip}</span>
       </div>
-      {view === "discover" ? (
-        <>
-          <section className="hero shell">
-            <div className="hero-copy">
-              <p className="eyebrow">
-                <Sparkles size={15} />
-                {t.tag}
-              </p>
-              <h1>
-                {t.heroA}
-                <br />
-                <span>
-                  {t.heroB}
-                  <svg viewBox="0 0 380 20" aria-hidden="true">
-                    <path
-                      d="M4 14 Q180-2 373 10"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="8"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </span>
-              </h1>
-              <p className="hero-description">{t.intro}</p>
-              <div className="hero-notes">
-                <span>
-                  <Check size={15} />
-                  {t.noGroup}
-                </span>
-                <span>
-                  <Check size={15} />
-                  {t.noChoose}
-                </span>
+      <main id="main-content" tabIndex={-1}>
+        {view === "discover" ? (
+          <>
+            <section className="hero shell">
+              <div className="hero-copy">
+                <p className="eyebrow">
+                  <Sparkles size={15} />
+                  {t.tag}
+                </p>
+                <h1>
+                  {t.heroA}
+                  <br />
+                  <span>
+                    {t.heroB}
+                    <svg viewBox="0 0 380 20" aria-hidden="true">
+                      <path
+                        d="M4 14 Q180-2 373 10"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>
+                </h1>
+                <p className="hero-description">{t.intro}</p>
+                <div className="hero-notes">
+                  <span>
+                    <Check size={15} />
+                    {t.noGroup}
+                  </span>
+                  <span>
+                    <Check size={15} />
+                    {t.noChoose}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="hero-art" aria-hidden="true">
-              <div className="orbit orbit-one" />
-              <div className="orbit orbit-two" />
-              <span className="floating-food food-one">🍕</span>
-              <span className="floating-food food-two">🥑</span>
-              <span className="floating-food food-three">🍜</span>
-              <span className="doodle star-one">✳</span>
-              <span className="doodle star-two">✦</span>
-              <div className="mascot-circle">
-                <Mascot />
+              <div className="hero-art" aria-hidden="true">
+                <div className="orbit orbit-one" />
+                <div className="orbit orbit-two" />
+                <span className="floating-food food-one">🍕</span>
+                <span className="floating-food food-two">🥑</span>
+                <span className="floating-food food-three">🍜</span>
+                <span className="doodle star-one">✳</span>
+                <span className="doodle star-two">✦</span>
+                <div className="mascot-circle">
+                  <Mascot />
+                </div>
+                <div className="speech" dir="ltr">
+                  let’s munch!
+                </div>
+                <div className="art-caption">{t.artCaption}</div>
               </div>
-              <div className="speech" dir="ltr">
-                let’s munch!
-              </div>
-              <div className="art-caption">{t.artCaption}</div>
-            </div>
-          </section>
-          <section className="picker shell" aria-label={t.discover}>
-            <div className="mode-row">
-              <div className="mode-tabs">
-                <button
-                  aria-pressed={mode === "eat"}
-                  className={mode === "eat" ? "selected" : ""}
-                  onClick={() => setMode("eat")}
-                >
-                  <Utensils size={18} />
-                  {t.eat}
-                </button>
-                <button
-                  aria-pressed={mode === "order"}
-                  className={mode === "order" ? "selected" : ""}
-                  onClick={() => setMode("order")}
-                >
-                  <span aria-hidden="true">⌂</span>
-                  {t.order}
-                </button>
-              </div>
-              <span className="tiny-label">
-                <SlidersHorizontal size={14} />
-                {t.rules}
-              </span>
-            </div>
-            {mode === "order" && <p className="order-note">{t.orderNote}</p>}
-            <div className="controls">
-              <div className="location-control">
-                <label htmlFor="area">
-                  <MapPin size={16} />
-                  {t.location}
-                </label>
-                <div className="area-line">
-                  <select
-                    id="area"
-                    value={area}
-                    aria-label={t.chooseArea}
-                    onChange={(e) => selectArea(e.target.value)}
-                  >
-                    {areas.map((a) => (
-                      <option key={a.id} value={a.id}>
-                        {a.name[locale]}
-                      </option>
-                    ))}
-                    {area === "device" && (
-                      <option value="device">{t.device}</option>
-                    )}
-                  </select>
+            </section>
+            <section className="picker shell" aria-label={t.discover}>
+              <div className="mode-row">
+                <div className="mode-tabs">
                   <button
-                    className="locate"
-                    onClick={locate}
-                    disabled={locationBusy}
-                    title={t.locate}
-                    aria-label={t.locate}
+                    aria-pressed={mode === "eat"}
+                    className={mode === "eat" ? "selected" : ""}
+                    onClick={() => setMode("eat")}
                   >
-                    <Navigation size={18} />
+                    <Utensils size={18} />
+                    {t.eat}
+                  </button>
+                  <button
+                    aria-pressed={mode === "order"}
+                    className={mode === "order" ? "selected" : ""}
+                    onClick={() => setMode("order")}
+                  >
+                    <span aria-hidden="true">⌂</span>
+                    {t.order}
                   </button>
                 </div>
-                <span className="field-hint">
-                  {locationBusy ? t.locating : t.demoArea}
+                <span className="tiny-label">
+                  <SlidersHorizontal size={14} />
+                  {t.rules}
                 </span>
               </div>
-              <div className="radius-control">
-                <label htmlFor="radius">
-                  {t.radius}
-                  <strong>
-                    {radius} {t.km}
-                  </strong>
-                </label>
-                <input
-                  id="radius"
-                  type="range"
-                  min="1"
-                  max="20"
-                  step="1"
-                  value={radius}
-                  onChange={(e) => {
-                    invalidate();
-                    setRadius(Number(e.target.value));
-                  }}
-                />
-                <div className="range-labels">
-                  <span>1 {t.km}</span>
-                  <span>20 {t.km}</span>
+              {mode === "order" && <p className="order-note">{t.orderNote}</p>}
+              <div className="controls">
+                <div className="location-control">
+                  <label htmlFor="area">
+                    <MapPin size={16} />
+                    {t.location}
+                  </label>
+                  <div className="area-line">
+                    <select
+                      id="area"
+                      value={area}
+                      aria-label={t.chooseArea}
+                      onChange={(e) => selectArea(e.target.value)}
+                    >
+                      {areas.map((a) => (
+                        <option key={a.id} value={a.id}>
+                          {a.name[locale]}
+                        </option>
+                      ))}
+                      {area === "device" && (
+                        <option value="device">{t.device}</option>
+                      )}
+                    </select>
+                    <button
+                      className="locate"
+                      onClick={locate}
+                      disabled={locationBusy}
+                      title={t.locate}
+                      aria-label={t.locate}
+                      aria-describedby="location-notice"
+                    >
+                      <Navigation size={18} />
+                    </button>
+                  </div>
+                  <span id="location-notice" className="field-hint">
+                    {locationBusy ? t.locating : t.demoArea}
+                  </span>
                 </div>
-              </div>
-              <label className="open-toggle">
-                <input
-                  type="checkbox"
-                  checked={openOnly}
-                  onChange={(e) => {
-                    invalidate();
-                    setOpenOnly(e.target.checked);
-                  }}
-                />
-                <span className="switch" />
-                <span>
-                  {t.openOnly}
-                  <small>
-                    {locale === "he"
-                      ? "לא מחכים לדלת שתיפתח"
-                      : "No waiting for the doors to open"}
-                  </small>
-                </span>
-              </label>
-            </div>
-            <div className="cuisines" aria-label={t.cuisineLabel}>
-              {(Object.keys(cuisineIcons) as Cuisine[]).map((key) => (
-                <button
-                  key={key}
-                  aria-pressed={cuisine === key}
-                  className={cuisine === key ? "chip selected" : "chip"}
-                  onClick={() => {
-                    if (cuisine === key) return;
-                    invalidate();
-                    setCuisine(key);
-                  }}
-                >
-                  <span aria-hidden="true">{cuisineIcons[key]}</span>
-                  {key === "all" ? t.any : t[key]}
-                </button>
-              ))}
-            </div>
-            {error && (
-              <p role="alert" className="error">
-                {t[error]}
-                <button
-                  className="secondary"
-                  onClick={() => {
-                    invalidate();
-                    setRefresh((n) => n + 1);
-                  }}
-                >
-                  {locale === "he" ? "נסו שוב" : "Try again"}
-                </button>
-              </p>
-            )}
-            <div className="draw-row">
-              <button
-                className={`draw-button ${drawing ? "drawing" : ""}`}
-                disabled={drawing || loading || !openPlaces.length}
-                onClick={draw}
-              >
-                <Dice5 size={23} />
-                {drawing ? t.drawing : t.surprise}
-                <Sparkles size={19} />
-              </button>
-              <p>{openPlaces.length === 1 ? t.one : t.fair}</p>
-              {drawing && (
-                <button
-                  className="text-button"
-                  onClick={() => {
-                    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-                    pendingResult.current?.();
-                  }}
-                >
-                  {t.skip}
-                </button>
-              )}
-            </div>
-          </section>
-          <section className="results shell" aria-busy={loading}>
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">{t.browse}</p>
-                <h2>
-                  {t.near}
-                  <span className="count">{places.length}</span>
-                </h2>
-              </div>
-              <span className="result-note">
-                <span className="google-attribution" translate="no">
-                  Google Maps
-                </span>{" "}
-                · {t.distance}
-              </span>
-            </div>
-            {places.length ? (
-              <div className="restaurant-grid">
-                {places.map((p) => (
-                  <button
-                    key={p.id}
-                    className="restaurant-card"
-                    onClick={() => {
-                      setWinner(p);
-                      setRandomResult(false);
+                <div className="radius-control">
+                  <label htmlFor="radius">
+                    {t.radius}
+                    <strong>
+                      {radius} {t.km}
+                    </strong>
+                  </label>
+                  <input
+                    id="radius"
+                    type="range"
+                    min="1"
+                    max="20"
+                    step="1"
+                    value={radius}
+                    onChange={(e) => {
+                      invalidate();
+                      setRadius(Number(e.target.value));
                     }}
-                    aria-label={`${p.name[locale]}, ${t[p.status === "open" ? "open" : p.status === "closed" ? "closed" : "unknown"]}`}
+                  />
+                  <div className="range-labels">
+                    <span>1 {t.km}</span>
+                    <span>20 {t.km}</span>
+                  </div>
+                </div>
+                <label className="open-toggle">
+                  <input
+                    type="checkbox"
+                    checked={openOnly}
+                    onChange={(e) => {
+                      invalidate();
+                      setOpenOnly(e.target.checked);
+                    }}
+                  />
+                  <span className="switch" />
+                  <span>
+                    {t.openOnly}
+                    <small>
+                      {locale === "he"
+                        ? "לא מחכים לדלת שתיפתח"
+                        : "No waiting for the doors to open"}
+                    </small>
+                  </span>
+                </label>
+              </div>
+              <div className="cuisines" aria-label={t.cuisineLabel}>
+                {(Object.keys(cuisineIcons) as Cuisine[]).map((key) => (
+                  <button
+                    key={key}
+                    aria-pressed={cuisine === key}
+                    className={cuisine === key ? "chip selected" : "chip"}
+                    onClick={() => {
+                      if (cuisine === key) return;
+                      invalidate();
+                      setCuisine(key);
+                    }}
                   >
-                    <div className={`food-panel ${p.color}`}>
-                      <FoodArt kind={p.food} />
-                      <span className="food-label">{t.illustration}</span>
-                      <span className="card-arrow">
-                        <ArrowUpRight size={18} />
-                      </span>
-                    </div>
-                    <div className="card-body">
-                      <div className="card-title">
-                        <h3>{p.name[locale]}</h3>
-                        <span className="price">
-                          {p.price ? "₪".repeat(p.price) : ""}
+                    <span aria-hidden="true">{cuisineIcons[key]}</span>
+                    {key === "all" ? t.any : t[key]}
+                  </button>
+                ))}
+              </div>
+              {error && (
+                <p role="alert" className="error">
+                  {t[error]}
+                  <button
+                    className="secondary"
+                    onClick={() => {
+                      invalidate();
+                      setRefresh((n) => n + 1);
+                    }}
+                  >
+                    {locale === "he" ? "נסו שוב" : "Try again"}
+                  </button>
+                </p>
+              )}
+              <div className="draw-row">
+                <button
+                  className={`draw-button ${drawing ? "drawing" : ""}`}
+                  disabled={drawing || loading || !openPlaces.length}
+                  onClick={draw}
+                >
+                  <Dice5 size={23} />
+                  {drawing ? t.drawing : t.surprise}
+                  <Sparkles size={19} />
+                </button>
+                <p>{openPlaces.length === 1 ? t.one : t.fair}</p>
+                {drawing && (
+                  <button
+                    className="text-button"
+                    onClick={() => {
+                      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                      pendingResult.current?.();
+                    }}
+                  >
+                    {t.skip}
+                  </button>
+                )}
+              </div>
+            </section>
+            <section className="results shell" aria-busy={loading}>
+              <p className="sr-only" role="status">
+                {loading
+                  ? locale === "he"
+                    ? "מחפשים מסעדות…"
+                    : "Searching for restaurants…"
+                  : `${places.length} ${t.results}`}
+              </p>
+              <div className="section-heading">
+                <div>
+                  <p className="eyebrow">{t.browse}</p>
+                  <h2>
+                    {t.near}
+                    <span className="count">{places.length}</span>
+                  </h2>
+                </div>
+                <span className="result-note">
+                  <span className="google-attribution" translate="no">
+                    Google Maps
+                  </span>{" "}
+                  · {t.distance}
+                </span>
+              </div>
+              {loading ? (
+                <p role="status">
+                  {locale === "he"
+                    ? "מחפשים מסעדות…"
+                    : "Searching for restaurants…"}
+                </p>
+              ) : places.length ? (
+                <div className="restaurant-grid">
+                  {places.map((p) => (
+                    <button
+                      key={p.id}
+                      className="restaurant-card"
+                      onClick={() => {
+                        setWinner(p);
+                        setRandomResult(false);
+                      }}
+                      aria-label={`${p.name[locale]}, ${t[p.status === "open" ? "open" : p.status === "closed" ? "closed" : "unknown"]}`}
+                    >
+                      <div className={`food-panel ${p.color}`}>
+                        <FoodArt kind={p.food} />
+                        <span className="food-label">{t.illustration}</span>
+                        <span className="card-arrow">
+                          <ArrowUpRight size={18} />
                         </span>
                       </div>
-                      {p.attributions?.map((a, i) => (
-                        <small key={i}>{a.provider}</small>
-                      ))}
-                      <p>
-                        {p.cuisine === "all" ? t.restaurant : t[p.cuisine]}
-                        <span>·</span>
-                        {new Intl.NumberFormat(locale, {
-                          maximumFractionDigits: 1,
-                        }).format(distanceKm(center, p.point))}{" "}
-                        {t.km}
-                      </p>
-                      <span className={`place-status ${p.status}`}>
-                        <i />
-                        {
-                          t[
-                            p.status === "open"
-                              ? "open"
-                              : p.status === "closed"
-                                ? "closed"
-                                : "unknown"
-                          ]
-                        }
-                      </span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="empty">
-                <Search size={36} />
-                <h3>{t.empty}</h3>
-                <p>{t.emptyBody}</p>
-                <button
-                  className="secondary"
-                  onClick={() => {
-                    selectArea(areas[0].id);
-                    setRadius(3);
-                    setCuisine("all");
-                  }}
-                >
-                  {t.reset}
-                </button>
-              </div>
-            )}
-            <p className="disclaimer">
-              <span>ⓘ</span>
-              {t.disclaimer}
-            </p>
-          </section>
-          <section className="play-banner shell">
-            <div className="banner-art" aria-hidden="true">
-              <span>✦</span>
-              <Gamepad2 size={78} strokeWidth={1.3} />
-              <span>✳</span>
-            </div>
-            <div>
-              <p className="eyebrow">{t.waitTag}</p>
-              <h2>{t.waitTitle}</h2>
-              <p>{t.waitBody}</p>
-            </div>
-            <button className="dark-button" onClick={showGames}>
-              {t.gamesCta}
-              <Arrow size={18} />
-            </button>
-          </section>
-        </>
-      ) : (
-        <section className="games-page shell">
-          <p className="eyebrow">
-            <Sparkles size={16} />
-            {t.gamesTag}
-          </p>
-          <h1>
-            {t.gamesTitle}
-            <br />
-            <span>{t.gamesAccent}</span>
-          </h1>
-          <p className="games-intro">{t.gamesIntro}</p>
-          {!game ? (
-            <>
-              <fieldset className="audiences">
-                <legend>{t.audience}</legend>
-                {(["family", "couple", "friends", "work"] as Audience[]).map(
-                  (a, i) => (
-                    <button
-                      key={a}
-                      aria-pressed={audience === a}
-                      className={audience === a ? "chip selected" : "chip"}
-                      onClick={() => setAudience(a)}
-                    >
-                      <span aria-hidden="true">
-                        {["🏡", "💛", "✌️", "☕"][i]}
-                      </span>
-                      {t[a]}
+                      <div className="card-body">
+                        <div className="card-title">
+                          <h3>{p.name[locale]}</h3>
+                          <span className="price">
+                            {p.price ? "₪".repeat(p.price) : ""}
+                          </span>
+                        </div>
+                        {p.attributions?.map((a, i) => (
+                          <small key={i}>{a.provider}</small>
+                        ))}
+                        <p>
+                          {p.cuisine === "all" ? t.restaurant : t[p.cuisine]}
+                          <span>·</span>
+                          {new Intl.NumberFormat(locale, {
+                            maximumFractionDigits: 1,
+                          }).format(distanceKm(center, p.point))}{" "}
+                          {t.km}
+                        </p>
+                        <span className={`place-status ${p.status}`}>
+                          <i />
+                          {
+                            t[
+                              p.status === "open"
+                                ? "open"
+                                : p.status === "closed"
+                                  ? "closed"
+                                  : "unknown"
+                            ]
+                          }
+                        </span>
+                      </div>
                     </button>
-                  ),
-                )}
-              </fieldset>
-              <div className="game-grid">
-                {(["would", "guess"] as GameType[]).map((type) => (
-                  <article className={`game-card ${type}`} key={type}>
-                    <div className="game-illustration" aria-hidden="true">
-                      {type === "would" ? (
-                        <>
-                          <span>🍕</span>
-                          <b>?</b>
-                          <span>🍔</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>🥐</span>
-                          <b>!</b>
-                          <span>🍜</span>
-                        </>
-                      )}
-                    </div>
-                    <span className="game-meta">
-                      {t.minutes} · {t.shared}
-                    </span>
-                    <h2>{t[type]}</h2>
-                    <p>{t[type === "would" ? "wouldBody" : "guessBody"]}</p>
-                    <button
-                      className="dark-button"
-                      onClick={() => startGame(type)}
-                    >
-                      {t.start}
-                      <Arrow size={18} />
-                    </button>
-                  </article>
-                ))}
-              </div>
-            </>
-          ) : (
-            <div className="game-stage">
-              <button className="text-button" onClick={() => setGame(null)}>
-                {t.back}
-              </button>
-              {round >= cards.length ? (
-                <div className="game-complete">
-                  <Mascot small />
-                  <h2>{t.done}</h2>
-                  <p>{t.doneBody}</p>
-                  <InstallCard
-                    locale={locale}
-                    install={install}
-                    placement="game"
-                  />
+                  ))}
+                </div>
+              ) : error ? null : (
+                <div className="empty">
+                  <Search size={36} />
+                  <h3>{t.empty}</h3>
+                  <p>{t.emptyBody}</p>
                   <button
-                    className="dark-button"
-                    onClick={() => startGame(game)}
+                    className="secondary"
+                    onClick={() => {
+                      selectArea(areas[0].id);
+                      setRadius(3);
+                      setCuisine("all");
+                    }}
                   >
-                    {t.replay}
-                    <RotateCw size={18} />
+                    {t.reset}
                   </button>
                 </div>
-              ) : (
-                <>
-                  <div className="round-header">
-                    <h2>{t[game]}</h2>
-                    <span>
-                      {t.round} {round + 1} {t.of} {cards.length}
-                    </span>
-                  </div>
-                  <progress
-                    aria-label={t.gameProgress}
-                    value={round + 1}
-                    max={cards.length}
-                  />
-                  <p className="turn-note">{t.turn}</p>
-                  {game === "would" ? (
-                    <>
-                      <p>{t.chooseHint}</p>
-                      <div className="choices">
-                        {cards[round].options.map((option, i) => (
-                          <button
-                            className={
-                              choice === i ? "choice picked" : "choice"
-                            }
-                            key={option}
-                            aria-pressed={choice === i}
-                            onClick={() => setChoice(i)}
-                          >
-                            <span>{i === 0 ? "A" : "B"}</span>
-                            {option}
-                            {choice === i && <Check size={22} />}
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <ol className="clues">
-                        {cards[round].clues.map((clue) => (
-                          <li key={clue}>{clue}</li>
-                        ))}
-                      </ol>
-                      {revealed ? (
-                        <p role="status" className="answer">
-                          {cards[round].answer}
-                        </p>
-                      ) : (
-                        <button
-                          className="secondary"
-                          onClick={() => setRevealed(true)}
-                        >
-                          {t.reveal}
-                        </button>
-                      )}
-                    </>
-                  )}
-                  <div className="round-actions">
-                    <button className="dark-button" onClick={nextRound}>
-                      {round === cards.length - 1 ? t.finish : t.next}
-                      <Arrow size={18} />
-                    </button>
-                    <button className="text-button" onClick={nextRound}>
-                      {t.skipQuestion}
-                    </button>
-                  </div>
-                </>
               )}
-            </div>
-          )}
-        </section>
-      )}
+              <p className="disclaimer">
+                <span>ⓘ</span>
+                {t.disclaimer}
+              </p>
+            </section>
+            <section className="play-banner shell">
+              <div className="banner-art" aria-hidden="true">
+                <span>✦</span>
+                <Gamepad2 size={78} strokeWidth={1.3} />
+                <span>✳</span>
+              </div>
+              <div>
+                <p className="eyebrow">{t.waitTag}</p>
+                <h2>{t.waitTitle}</h2>
+                <p>{t.waitBody}</p>
+              </div>
+              <button className="dark-button" onClick={showGames}>
+                {t.gamesCta}
+                <Arrow size={18} />
+              </button>
+            </section>
+          </>
+        ) : (
+          <section className="games-page shell">
+            <p className="eyebrow">
+              <Sparkles size={16} />
+              {t.gamesTag}
+            </p>
+            <h1>
+              {t.gamesTitle}
+              <br />
+              <span>{t.gamesAccent}</span>
+            </h1>
+            <p className="games-intro">{t.gamesIntro}</p>
+            {!game ? (
+              <>
+                <fieldset className="audiences">
+                  <legend>{t.audience}</legend>
+                  {(["family", "couple", "friends", "work"] as Audience[]).map(
+                    (a, i) => (
+                      <button
+                        key={a}
+                        aria-pressed={audience === a}
+                        className={audience === a ? "chip selected" : "chip"}
+                        onClick={() => setAudience(a)}
+                      >
+                        <span aria-hidden="true">
+                          {["🏡", "💛", "✌️", "☕"][i]}
+                        </span>
+                        {t[a]}
+                      </button>
+                    ),
+                  )}
+                </fieldset>
+                <div className="game-grid">
+                  {(["would", "guess"] as GameType[]).map((type) => (
+                    <article className={`game-card ${type}`} key={type}>
+                      <div className="game-illustration" aria-hidden="true">
+                        {type === "would" ? (
+                          <>
+                            <span>🍕</span>
+                            <b>?</b>
+                            <span>🍔</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>🥐</span>
+                            <b>!</b>
+                            <span>🍜</span>
+                          </>
+                        )}
+                      </div>
+                      <span className="game-meta">
+                        {t.minutes} · {t.shared}
+                      </span>
+                      <h2>{t[type]}</h2>
+                      <p>{t[type === "would" ? "wouldBody" : "guessBody"]}</p>
+                      <button
+                        className="dark-button"
+                        onClick={() => startGame(type)}
+                      >
+                        {t.start}
+                        <Arrow size={18} />
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="game-stage">
+                <button className="text-button" onClick={() => setGame(null)}>
+                  {t.back}
+                </button>
+                {round >= cards.length ? (
+                  <div className="game-complete">
+                    <Mascot small />
+                    <h2>{t.done}</h2>
+                    <p>{t.doneBody}</p>
+                    <InstallCard
+                      locale={locale}
+                      install={install}
+                      placement="game"
+                    />
+                    <button
+                      className="dark-button"
+                      onClick={() => startGame(game)}
+                    >
+                      {t.replay}
+                      <RotateCw size={18} />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="round-header">
+                      <h2>{t[game]}</h2>
+                      <span role="status">
+                        {t.round} {round + 1} {t.of} {cards.length}
+                      </span>
+                    </div>
+                    <progress
+                      aria-label={t.gameProgress}
+                      value={round + 1}
+                      max={cards.length}
+                    />
+                    <p className="turn-note">{t.turn}</p>
+                    {game === "would" ? (
+                      <>
+                        <p>{t.chooseHint}</p>
+                        <div className="choices">
+                          {cards[round].options.map((option, i) => (
+                            <button
+                              className={
+                                choice === i ? "choice picked" : "choice"
+                              }
+                              key={option}
+                              aria-pressed={choice === i}
+                              onClick={() => setChoice(i)}
+                            >
+                              <span>{i === 0 ? "A" : "B"}</span>
+                              {option}
+                              {choice === i && <Check size={22} />}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <ol className="clues">
+                          {cards[round].clues.map((clue) => (
+                            <li key={clue}>{clue}</li>
+                          ))}
+                        </ol>
+                        {revealed ? (
+                          <p role="status" className="answer">
+                            {cards[round].answer}
+                          </p>
+                        ) : (
+                          <button
+                            className="secondary"
+                            onClick={() => setRevealed(true)}
+                          >
+                            {t.reveal}
+                          </button>
+                        )}
+                      </>
+                    )}
+                    <div className="round-actions">
+                      <button className="dark-button" onClick={nextRound}>
+                        {round === cards.length - 1 ? t.finish : t.next}
+                        <Arrow size={18} />
+                      </button>
+                      <button className="text-button" onClick={nextRound}>
+                        {t.skipQuestion}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </section>
+        )}
+      </main>
       {installHelp && (
         <div className="shell">
           <InstallCard
@@ -783,7 +804,12 @@ export default function Home() {
           />
         </div>
       )}
-      <footer className="shell">
+      <footer
+        className="shell"
+        aria-label={
+          locale === "he" ? "Munchadoo והתקנה" : "Munchadoo and installation"
+        }
+      >
         {install.state.ready && !install.state.installed && (
           <button
             className="text-button"
@@ -906,6 +932,6 @@ export default function Home() {
           </div>
         )}
       </dialog>
-    </main>
+    </div>
   );
 }

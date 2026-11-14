@@ -1,12 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=Nunito+Sans:wght@400;600;700;800;900;1000&display=swap");
 :root {
   --ink: #293d31;
-  --muted: #778075;
+  --muted: #56604f;
   --cream: #faf9f4;
   --orange: #ee805b;
   --line: #e5e7dc;
   --lime: #dceaa4;
-  --font: "Nunito Sans", "Heebo", sans-serif;
+  --font: Arial, sans-serif;
 }
 * {
   box-sizing: border-box;
@@ -16,10 +15,10 @@ body {
   background: var(--cream);
   color: var(--ink);
   font-family: var(--font);
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 html[lang="he"] {
-  --font: "Heebo", "Nunito Sans", sans-serif;
+  --font: Arial, sans-serif;
 }
 button,
 input,
@@ -96,8 +95,8 @@ p {
 .wordmark {
   display: flex;
   align-items: center;
-  font-family: "Nunito Sans", sans-serif;
-  font-size: 30px;
+  font-family: Arial, sans-serif;
+  font-size: 1.875rem;
   font-weight: 1000;
   letter-spacing: -1.4px;
   padding: 0;
@@ -112,7 +111,7 @@ p {
   background: var(--orange);
   color: var(--cream);
   border-radius: 14px 14px 18px 18px;
-  font-size: 36px;
+  font-size: 2.25rem;
   font-style: italic;
   width: 38px;
   height: 39px;
@@ -128,7 +127,7 @@ p {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #777e71;
+  color: #526046;
   font-weight: 600;
   padding: 30px 0;
   position: relative;
@@ -153,7 +152,7 @@ p {
   display: flex;
   gap: 8px;
   align-items: center;
-  font-size: 12px;
+  font-size: 0.8125rem;
   font-weight: 800;
 }
 .demo-strip {
@@ -162,7 +161,7 @@ p {
   align-items: center;
   justify-content: center;
   gap: 9px;
-  font-size: 11px;
+  font-size: 0.8125rem;
   letter-spacing: 0.02em;
   padding: 10px 20px;
   color: #5a6956;
@@ -186,16 +185,16 @@ p {
   gap: 50px;
 }
 .eyebrow {
-  font-size: 12px;
+  font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.07em;
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #75805d;
+  color: #526046;
 }
 .hero h1 {
-  font-size: 67px;
+  font-size: 4.1875rem;
   line-height: 1.16;
   letter-spacing: -0.055em;
   font-weight: 900;
@@ -215,16 +214,16 @@ p {
   opacity: 0.5;
 }
 .hero-description {
-  font-size: 16px;
-  color: #6e776a;
+  font-size: 1rem;
+  color: #526046;
   max-width: 440px;
   line-height: 1.9;
 }
 .hero-notes {
   display: flex;
   gap: 24px;
-  font-size: 11px;
-  color: #7a8271;
+  font-size: 0.8125rem;
+  color: #526046;
   margin-top: 22px;
 }
 .hero-notes span {
@@ -281,7 +280,7 @@ p {
   border-radius: 20px;
   box-shadow: 0 8px 12px #34442d08;
   border: 1px solid #fff6;
-  font-size: 39px;
+  font-size: 2.4375rem;
 }
 .food-one {
   background: #f6dfbc;
@@ -304,7 +303,7 @@ p {
 .doodle {
   position: absolute;
   color: #b0bd80;
-  font-size: 32px;
+  font-size: 2rem;
 }
 .star-one {
   right: 55px;
@@ -314,7 +313,7 @@ p {
   left: 12px;
   top: 152px;
   color: var(--orange);
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 .speech {
   position: absolute;
@@ -325,7 +324,7 @@ p {
   padding: 10px 17px;
   border: 1px solid #e0e3d0;
   border-radius: 40px;
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 900;
   transform: rotate(9deg);
 }
@@ -333,8 +332,8 @@ p {
   position: absolute;
   bottom: 1px;
   right: 44px;
-  font-size: 12px;
-  color: #7a836e;
+  font-size: 0.8125rem;
+  color: #526046;
   transform: rotate(-7deg);
 }
 .picker {
@@ -361,8 +360,8 @@ p {
   align-items: center;
   gap: 9px;
   border-bottom: 3px solid transparent;
-  color: #818777;
-  font-size: 14px;
+  color: #526046;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 .mode-tabs .selected {
@@ -370,12 +369,12 @@ p {
   color: var(--ink);
 }
 .mode-tabs span {
-  font-size: 23px;
+  font-size: 1.4375rem;
   line-height: 18px;
 }
 .tiny-label {
-  font-size: 11px;
-  color: #8b9283;
+  font-size: 0.8125rem;
+  color: #526046;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -387,7 +386,7 @@ p {
   align-items: center;
 }
 .controls label {
-  font-size: 12px;
+  font-size: 0.8125rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -406,7 +405,7 @@ select {
   padding: 11px;
   width: 100%;
   min-width: 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
 }
 .locate {
@@ -418,8 +417,8 @@ select {
   flex-shrink: 0;
 }
 .field-hint {
-  font-size: 10px;
-  color: #848e79;
+  font-size: 0.8125rem;
+  color: #526046;
   display: block;
   margin-top: 6px;
 }
@@ -427,7 +426,7 @@ select {
   justify-content: space-between;
 }
 .radius-control strong {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   background: #eef1e3;
   border-radius: 6px;
@@ -442,8 +441,8 @@ select {
 .range-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
-  color: #89907f;
+  font-size: 0.8125rem;
+  color: #526046;
   margin-top: 5px;
 }
 .open-toggle {
@@ -493,10 +492,10 @@ select {
   inset-inline-end: 3px;
 }
 .open-toggle small {
-  font-size: 10px;
+  font-size: 0.8125rem;
   font-weight: 400;
   display: block;
-  color: #828c77;
+  color: #526046;
   margin-top: 5px;
 }
 .cuisines {
@@ -513,7 +512,7 @@ select {
   border: 1px solid var(--line);
   padding: 9px 16px;
   border-radius: 30px;
-  font-size: 12px;
+  font-size: 0.8125rem;
   background: #fffefb;
   font-weight: 500;
 }
@@ -526,7 +525,7 @@ select {
   color: #344b2a;
 }
 .chip span {
-  font-size: 17px;
+  font-size: 1.0625rem;
   line-height: 1;
 }
 .draw-row {
@@ -544,7 +543,7 @@ select {
   border-radius: 12px;
   background: var(--orange);
   color: #283e30;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 800;
   min-height: 55px;
   padding: 13px 30px;
@@ -557,14 +556,14 @@ select {
   transform: translateY(-2px);
 }
 .draw-row p {
-  font-size: 10px;
-  color: #909680;
+  font-size: 0.8125rem;
+  color: #526046;
 }
 .draw-button.drawing svg:first-child {
   animation: tumble 0.4s linear infinite;
 }
 .text-button {
-  font-size: 12px;
+  font-size: 0.8125rem;
   text-decoration: underline;
   text-underline-offset: 4px;
   padding: 8px;
@@ -572,7 +571,7 @@ select {
 }
 .error,
 .order-note {
-  font-size: 12px;
+  font-size: 0.8125rem;
   background: #fff1df;
   color: #865625;
   padding: 12px 16px;
@@ -594,19 +593,19 @@ select {
   margin-bottom: 24px;
 }
 .section-heading .eyebrow {
-  font-size: 11px;
+  font-size: 0.8125rem;
   font-weight: 400;
   letter-spacing: 0;
   margin-bottom: 4px;
 }
 .section-heading h2 {
-  font-size: 25px;
+  font-size: 1.5625rem;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 .count {
-  font-size: 12px;
+  font-size: 0.8125rem;
   letter-spacing: 0;
   min-width: 26px;
   height: 26px;
@@ -617,8 +616,8 @@ select {
   font-weight: 500;
 }
 .result-note {
-  font-size: 10px;
-  color: #8b9280;
+  font-size: 0.8125rem;
+  color: #526046;
 }
 .restaurant-grid {
   display: grid;
@@ -672,7 +671,7 @@ select {
   position: absolute;
   top: 12px;
   inset-inline-start: 12px;
-  font-size: 9px;
+  font-size: 0.8125rem;
   border-radius: 20px;
   background: #fffff5b8;
   padding: 4px 9px;
@@ -699,27 +698,27 @@ select {
   gap: 12px;
 }
 .card-title h3 {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
 }
 .price {
-  font-size: 11px;
-  color: #91977d;
+  font-size: 0.8125rem;
+  color: #526046;
   letter-spacing: 2px;
 }
 .card-body > p {
-  font-size: 11px;
-  color: #929780;
+  font-size: 0.8125rem;
+  color: #526046;
   display: flex;
   gap: 8px;
   margin-block: 5px 12px;
 }
 .place-status {
-  font-size: 10px;
+  font-size: 0.8125rem;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #698047;
+  color: #526046;
   background: #f0f4e7;
   padding: 4px 8px;
   border-radius: 5px;
@@ -733,18 +732,18 @@ select {
 .place-status.closed,
 .place-status.unknown {
   background: #f2ece3;
-  color: #947550;
+  color: #526046;
 }
 .disclaimer {
-  font-size: 10px;
-  color: #8a9180;
+  font-size: 0.8125rem;
+  color: #526046;
   display: flex;
   align-items: start;
   gap: 7px;
   margin-top: 19px;
 }
 .disclaimer span {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .play-banner {
   border-radius: 18px;
@@ -757,16 +756,16 @@ select {
   margin-bottom: 46px;
 }
 .play-banner .eyebrow {
-  font-size: 9px;
+  font-size: 0.8125rem;
   letter-spacing: 0.1em;
 }
 .play-banner h2 {
-  font-size: 24px;
+  font-size: 1.5rem;
   margin-block: 4px;
 }
 .play-banner p:not(.eyebrow) {
-  font-size: 12px;
-  color: #7b8270;
+  font-size: 0.8125rem;
+  color: #526046;
 }
 .banner-art {
   display: flex;
@@ -777,7 +776,7 @@ select {
   direction: ltr;
 }
 .banner-art > span {
-  font-size: 25px;
+  font-size: 1.5625rem;
   color: #b0ba8b;
 }
 .banner-art svg {
@@ -794,7 +793,7 @@ select {
   gap: 13px;
   border-radius: 9px;
   padding: 12px 19px;
-  font-size: 12px;
+  font-size: 0.8125rem;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -813,7 +812,7 @@ select {
   border-radius: 9px;
   background: #f7f8ef;
   padding: 11px 17px;
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 .empty {
   text-align: center;
@@ -827,12 +826,12 @@ select {
   gap: 10px;
 }
 .empty h3 {
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 .empty p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   max-width: 450px;
-  color: #79846e;
+  color: #526046;
 }
 .empty svg {
   color: #94a478;
@@ -846,11 +845,11 @@ footer {
   align-items: center;
   gap: 25px;
   padding-block: 27px 32px;
-  font-size: 10px;
-  color: #949984;
+  font-size: 0.8125rem;
+  color: #526046;
 }
 .footer-logo {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 900;
   letter-spacing: -1px;
   color: #6e7b60;
@@ -866,7 +865,7 @@ footer {
   min-height: 75vh;
 }
 .games-page > h1 {
-  font-size: 54px;
+  font-size: 3.375rem;
   line-height: 1.25;
   margin-block: 16px;
 }
@@ -874,8 +873,8 @@ footer {
   color: var(--orange);
 }
 .games-intro {
-  color: #7b8470;
-  font-size: 15px;
+  color: #526046;
+  font-size: 0.9375rem;
   margin-bottom: 29px;
 }
 .audiences {
@@ -887,7 +886,7 @@ footer {
   margin: 0 0 30px;
 }
 .audiences legend {
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin-bottom: 12px;
   font-weight: 600;
 }
@@ -912,7 +911,7 @@ footer {
   align-items: center;
   justify-content: center;
   gap: 26px;
-  font-size: 65px;
+  font-size: 4.0625rem;
 }
 .game-illustration span:first-child {
   transform: rotate(-15deg);
@@ -921,7 +920,7 @@ footer {
   transform: rotate(12deg);
 }
 .game-illustration b {
-  font-size: 75px;
+  font-size: 4.6875rem;
   font-weight: 900;
   color: #9ca574;
 }
@@ -929,16 +928,16 @@ footer {
   color: #aaa0bd;
 }
 .game-meta {
-  font-size: 10px;
-  color: #82876f;
+  font-size: 0.8125rem;
+  color: #526046;
 }
 .game-card h2 {
-  font-size: 28px;
+  font-size: 1.75rem;
   margin: 8px 0;
 }
 .game-card p {
-  font-size: 13px;
-  color: #777f6e;
+  font-size: 0.8125rem;
+  color: #526046;
 }
 .game-card .dark-button {
   margin-top: 24px;
@@ -959,11 +958,11 @@ footer {
   margin-block: 20px;
 }
 .round-header h2 {
-  font-size: 27px;
+  font-size: 1.6875rem;
 }
 .round-header span {
-  font-size: 12px;
-  color: #808a70;
+  font-size: 0.8125rem;
+  color: #526046;
 }
 progress {
   width: 100%;
@@ -971,8 +970,8 @@ progress {
   accent-color: #829758;
 }
 .turn-note {
-  font-size: 12px;
-  color: #848e77;
+  font-size: 0.8125rem;
+  color: #526046;
   margin: 17px 0;
 }
 .choices {
@@ -992,14 +991,14 @@ progress {
   border: 2px solid transparent;
   border-radius: 16px;
   padding: 20px;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 600;
 }
 .choice:nth-child(2) {
   background: #eae5f0;
 }
 .choice span {
-  font-size: 12px;
+  font-size: 0.8125rem;
   border-radius: 50%;
   background: #ffffff90;
   width: 26px;
@@ -1020,7 +1019,7 @@ progress {
   padding-inline-start: 25px;
   margin-block: 25px;
   line-height: 2.4;
-  font-size: 17px;
+  font-size: 1.0625rem;
 }
 .clues li::marker {
   color: #a2ae85;
@@ -1030,7 +1029,7 @@ progress {
   padding: 15px;
   border-radius: 10px;
   background: #edf2df;
-  font-size: 24px;
+  font-size: 1.5rem;
   text-align: center;
 }
 .game-complete {
@@ -1038,11 +1037,11 @@ progress {
   padding: 20px;
 }
 .game-complete h2 {
-  font-size: 29px;
+  font-size: 1.8125rem;
 }
 .game-complete p {
   margin-block: 15px 25px;
-  color: #7e876f;
+  color: #526046;
 }
 dialog {
   padding: 0;
@@ -1078,7 +1077,7 @@ dialog::backdrop {
 .winner-content > .eyebrow {
   justify-content: center;
   padding-inline: 20px;
-  font-size: 12px;
+  font-size: 0.8125rem;
   margin-block: 10px 22px;
 }
 .winner-art {
@@ -1088,20 +1087,20 @@ dialog::backdrop {
   justify-content: center;
 }
 .winner-content h2 {
-  font-size: 32px;
+  font-size: 2rem;
   margin-top: 20px;
 }
 .winner-content > p:not(.eyebrow) {
-  font-size: 12px;
-  color: #7e886e;
+  font-size: 0.8125rem;
+  color: #526046;
   margin-top: 6px;
 }
 .winner-content > .place-status {
   margin-top: 13px;
 }
 .winner-note {
-  font-size: 11px;
-  color: #867956;
+  font-size: 0.8125rem;
+  color: #526046;
   background: #f8f2e3;
   border-radius: 10px;
   padding: 12px;
@@ -1115,7 +1114,7 @@ dialog::backdrop {
 .winner-actions .draw-button {
   min-width: 0;
   width: 100%;
-  font-size: 14px;
+  font-size: 0.875rem;
   min-height: 47px;
 }
 .winner-actions .secondary {
@@ -1131,7 +1130,7 @@ dialog::backdrop {
     min-height: 440px;
   }
   .hero h1 {
-    font-size: 76px;
+    font-size: 4.75rem;
   }
   .hero-art {
     transform: scale(1.07);
@@ -1145,7 +1144,7 @@ dialog::backdrop {
     gap: 12px;
   }
   .hero h1 {
-    font-size: 56px;
+    font-size: 3.5rem;
   }
   .hero-art {
     transform: scale(0.88);
@@ -1164,7 +1163,7 @@ dialog::backdrop {
     gap: 16px;
   }
   .play-banner h2 {
-    font-size: 21px;
+    font-size: 1.3125rem;
   }
   .hero-notes {
     gap: 13px;
@@ -1181,12 +1180,12 @@ dialog::backdrop {
     position: relative;
   }
   .wordmark {
-    font-size: 25px;
+    font-size: 1.5625rem;
   }
   .logo-face {
     width: 31px;
     height: 32px;
-    font-size: 29px;
+    font-size: 1.8125rem;
     border-radius: 11px;
   }
   .header nav {
@@ -1198,14 +1197,14 @@ dialog::backdrop {
     z-index: 2;
   }
   .nav-item {
-    font-size: 12px;
+    font-size: 0.8125rem;
     padding: 15px 0;
   }
   .nav-item.active:after {
     bottom: 4px;
   }
   .demo-strip {
-    font-size: 9px;
+    font-size: 0.8125rem;
     padding-block: 8px;
   }
   .strip-divider {
@@ -1223,21 +1222,21 @@ dialog::backdrop {
   }
   .hero-copy > .eyebrow {
     justify-content: center;
-    font-size: 11px;
+    font-size: 0.8125rem;
   }
   .hero h1 {
-    font-size: 53px;
+    font-size: 3.3125rem;
     line-height: 1.13;
     margin-block: 14px 27px;
   }
   .hero-description {
-    font-size: 14px;
+    font-size: 0.875rem;
     max-width: 340px;
     margin: auto;
   }
   .hero-notes {
     justify-content: center;
-    font-size: 10px;
+    font-size: 0.8125rem;
     margin-top: 17px;
   }
   .hero-art {
@@ -1292,7 +1291,7 @@ dialog::backdrop {
     justify-content: center;
   }
   .mode-tabs button {
-    font-size: 12px;
+    font-size: 0.8125rem;
     padding-block: 20px 15px;
   }
   .tiny-label {
@@ -1304,10 +1303,10 @@ dialog::backdrop {
   }
   .location-control label,
   .radius-control label {
-    font-size: 12px;
+    font-size: 0.8125rem;
   }
   .field-hint {
-    font-size: 10px;
+    font-size: 0.8125rem;
   }
   .open-toggle {
     border: 0;
@@ -1318,7 +1317,7 @@ dialog::backdrop {
     display: none;
   }
   .open-toggle > span:last-child {
-    font-size: 12px;
+    font-size: 0.8125rem;
   }
   .radius-control input {
     height: 23px;
@@ -1328,20 +1327,20 @@ dialog::backdrop {
     padding-top: 23px;
   }
   .chip {
-    font-size: 11px;
+    font-size: 0.8125rem;
     padding: 9px 12px;
     min-height: 39px;
   }
   .draw-button {
     width: 100%;
     min-width: 0;
-    font-size: 14px;
+    font-size: 0.875rem;
     gap: 9px;
     padding-inline: 15px;
   }
   .draw-row p {
     text-align: center;
-    font-size: 9px;
+    font-size: 0.8125rem;
   }
   .draw-row {
     padding-top: 23px;
@@ -1354,7 +1353,7 @@ dialog::backdrop {
     margin-bottom: 18px;
   }
   .section-heading h2 {
-    font-size: 23px;
+    font-size: 1.4375rem;
   }
   .result-note {
     display: none;
@@ -1367,7 +1366,7 @@ dialog::backdrop {
     height: 130px;
   }
   .food-label {
-    font-size: 8px;
+    font-size: 0.8125rem;
     top: 9px;
     inset-inline-start: 8px;
     padding: 3px 6px;
@@ -1380,19 +1379,19 @@ dialog::backdrop {
     padding: 12px 11px;
   }
   .card-title h3 {
-    font-size: 15px;
+    font-size: 0.9375rem;
     letter-spacing: -0.05em;
   }
   .price {
     display: none;
   }
   .card-body > p {
-    font-size: 9px;
+    font-size: 0.8125rem;
     gap: 4px;
     flex-wrap: wrap;
   }
   .place-status {
-    font-size: 9px;
+    font-size: 0.8125rem;
     padding: 3px 6px;
   }
   .card-arrow {
@@ -1405,7 +1404,7 @@ dialog::backdrop {
     width: 14px;
   }
   .disclaimer {
-    font-size: 9px;
+    font-size: 0.8125rem;
     line-height: 1.8;
   }
   .play-banner {
@@ -1418,25 +1417,25 @@ dialog::backdrop {
     display: none;
   }
   .play-banner h2 {
-    font-size: 22px;
+    font-size: 1.375rem;
   }
   .play-banner p:not(.eyebrow) {
-    font-size: 12px;
+    font-size: 0.8125rem;
   }
   .play-banner > .dark-button {
     margin: 5px 0 0;
   }
   .play-banner .eyebrow {
-    font-size: 9px;
+    font-size: 0.8125rem;
   }
   footer {
     gap: 12px;
     flex-wrap: wrap;
     padding-block: 24px;
-    font-size: 9px;
+    font-size: 0.8125rem;
   }
   .footer-logo {
-    font-size: 18px;
+    font-size: 1.125rem;
   }
   footer > span:nth-child(2) {
     width: calc(100% - 110px);
@@ -1448,10 +1447,10 @@ dialog::backdrop {
     padding-top: 80px;
   }
   .games-page > h1 {
-    font-size: 39px;
+    font-size: 2.4375rem;
   }
   .games-intro {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
   .game-grid {
     grid-template-columns: 1fr;
@@ -1464,7 +1463,7 @@ dialog::backdrop {
     height: 115px;
   }
   .game-card h2 {
-    font-size: 26px;
+    font-size: 1.625rem;
   }
   .game-stage {
     padding: 19px;
@@ -1473,21 +1472,21 @@ dialog::backdrop {
     gap: 10px;
   }
   .round-header h2 {
-    font-size: 22px;
+    font-size: 1.375rem;
   }
   .round-header span {
-    font-size: 10px;
+    font-size: 0.8125rem;
   }
   .choices {
     gap: 10px;
   }
   .choice {
     padding: 12px;
-    font-size: 15px;
+    font-size: 0.9375rem;
     min-height: 140px;
   }
   .clues {
-    font-size: 15px;
+    font-size: 0.9375rem;
     line-height: 1.9;
   }
   .clues li {
@@ -1504,7 +1503,7 @@ dialog::backdrop {
     height: 155px;
   }
   .winner-content h2 {
-    font-size: 28px;
+    font-size: 1.75rem;
   }
   .language {
     padding: 8px 10px;
@@ -1524,7 +1523,7 @@ dialog::backdrop {
   font-family: Arial, sans-serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 14px;
+  font-size: 0.875rem;
   letter-spacing: normal;
   white-space: nowrap;
   color: #5e5e5e;
@@ -1550,12 +1549,12 @@ dialog::backdrop {
   height: 64px;
 }
 .install-card h3 {
-  font-size: 19px;
+  font-size: 1.1875rem;
   line-height: 1.4;
   margin: 0 0 6px;
 }
 .install-card p {
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.6;
   margin: 6px 0;
 }
@@ -1583,7 +1582,7 @@ dialog::backdrop {
 .install-guide li {
   margin: 10px 0;
   line-height: 1.6;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .install-guide ol {
   padding-inline-start: 22px;
@@ -1604,4 +1603,318 @@ dialog::backdrop {
     width: 100%;
     justify-content: center;
   }
+}
+
+/* Core accessibility improvements and transparent privacy controls. */
+html {
+  scroll-padding-block: 1rem;
+}
+html[data-large-text] {
+  font-size: 125%;
+}
+button,
+select,
+input[type="checkbox"],
+summary {
+  min-height: 44px;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #403075;
+  outline-offset: 3px;
+}
+.header-inner {
+  height: auto;
+  min-height: 88px;
+  flex-wrap: wrap;
+  padding-block: 12px;
+}
+.hero h1 > span,
+.games-hero h1 span {
+  color: #ac4025;
+}
+.locate {
+  min-width: 44px;
+}
+.field-hint {
+  display: block;
+  line-height: 1.6;
+  max-width: 38rem;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: fixed;
+  top: 8px;
+  inset-inline-start: 8px;
+  transform: translateY(-180%);
+  z-index: 10000;
+  background: #fff;
+  color: #182b20;
+  border: 3px solid #182b20;
+  padding: 12px 20px;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+html[lang="he"] .only-en,
+html[lang="en"] .only-he {
+  display: none;
+}
+.site-footer {
+  display: block;
+  border-top: 1px solid #c7cebf;
+  padding-block: 24px;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+.site-footer nav,
+.access-tools > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.site-footer a,
+.site-footer nav button {
+  color: #293d31;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.site-footer p {
+  margin-block: 12px;
+  overflow-wrap: anywhere;
+}
+.access-tools {
+  margin-block: 16px;
+}
+.access-tools summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+.access-tools button {
+  border: 1px solid #526046;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.access-tools button[aria-pressed="true"] {
+  background: #293d31;
+  color: #fff;
+}
+.consent-banner {
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  inset-inline: 0;
+  background: #fffef9;
+  border-top: 2px solid #526046;
+  box-shadow: 0 -4px 24px #0001;
+  padding: 20px max(20px, calc((100% - 1140px) / 2));
+  max-height: 65dvh;
+  overflow: auto;
+  color: #293d31;
+}
+.consent-banner h2 {
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+.consent-banner p,
+.privacy-dialog p {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.consent-banner a,
+.legal-page a {
+  color: #234f35;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.consent-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+.consent-actions button {
+  background: #293d31;
+  color: #fff;
+  border: 2px solid #293d31;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  min-height: 44px;
+}
+.privacy-dialog {
+  max-width: 640px;
+  width: calc(100% - 32px);
+  max-height: 85dvh;
+  padding: 24px;
+  line-height: 1.7;
+}
+.privacy-dialog h2 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+.privacy-dialog p {
+  margin-block: 12px;
+}
+.privacy-dialog label {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.privacy-dialog input {
+  min-width: 24px;
+  accent-color: #293d31;
+}
+.legal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: 24px;
+}
+.legal-header > a {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #293d31;
+}
+.legal-page {
+  max-width: 850px;
+  padding-block: 32px 64px;
+  overflow-wrap: anywhere;
+}
+.legal-page h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.3;
+}
+.legal-page .legal-intro {
+  font-size: 1.25rem;
+  margin-block: 24px;
+}
+.legal-page h2 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+.legal-page section {
+  margin-block: 32px;
+}
+.legal-page p {
+  font-size: 1rem;
+  margin-block: 12px;
+}
+html[data-reduce-motion] *,
+html[data-reduce-motion] *::before,
+html[data-reduce-motion] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+html[data-high-contrast] body,
+html[data-high-contrast] main,
+html[data-high-contrast] section,
+html[data-high-contrast] header,
+html[data-high-contrast] footer,
+html[data-high-contrast] aside,
+html[data-high-contrast] dialog,
+html[data-high-contrast] .card-body {
+  background: #fff !important;
+  color: #000 !important;
+}
+html[data-high-contrast]
+  :is(h1, h2, h3, h4, p, span, a, li, label, summary, small) {
+  color: #000 !important;
+}
+html[data-high-contrast] :is(button, select, input) {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+html[data-high-contrast] button[aria-pressed="true"] {
+  outline: 3px solid #000;
+  outline-offset: 2px;
+}
+@media (max-width: 600px) {
+  .consent-actions button {
+    flex: 1 1 100%;
+  }
+  .site-footer nav {
+    gap: 8px 16px;
+  }
+  .legal-page,
+  .legal-header {
+    width: calc(100% - 32px);
+  }
+  .consent-banner {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 760px) {
+  .header nav {
+    position: static;
+    order: 3;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-inner {
+    height: auto;
+  }
+  .hero {
+    padding-top: 32px;
+  }
+  .games-hero {
+    padding-top: 32px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 10vw, 3.3125rem);
+  }
+  .mode-tabs {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .round-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+@media (forced-colors: active) {
+  button,
+  a,
+  input,
+  select,
+  summary {
+    forced-color-adjust: auto;
+  }
+  button {
+    border: 1px solid ButtonText;
+  }
+  button[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+  }
+}
+
+.draw-button {
+  color: #192c20;
+}
+.food-label {
+  color: #33432b;
+  background: #fffef5;
 }

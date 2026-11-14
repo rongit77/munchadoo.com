@@ -4,12 +4,20 @@ import { Download, X } from "lucide-react";
 import { Mascot } from "./illustrations";
 import {
   canOffer,
-  INSTALL_KEY,
   isIOS,
   readInstallRecord,
   WEEK,
   type InstallRecord,
 } from "@/lib/install";
+import {
+  CONSENT_EVENT,
+  measurementAllowed,
+  removeMeasurement,
+  readMeasurement,
+  writeMeasurement,
+  readDismissal,
+  saveDismissal,
+} from "@/lib/privacy";
 import type { Locale } from "@/lib/places";
 type InstallEvent = Event & {
   prompt(): Promise<void>;
@@ -80,10 +88,14 @@ export function useInstall() {
   });
   function track(name: string) {
     const r = record.current;
+    if (!measurementAllowed()) {
+      removeMeasurement();
+      return;
+    }
     if (!r) return;
     r.counts[name] = Math.min(100000, (Number(r.counts[name]) || 0) + 1);
     try {
-      localStorage.setItem(INSTALL_KEY, JSON.stringify(r));
+      writeMeasurement(JSON.stringify(r));
     } catch {
       /* Private mode still works. */
     }
@@ -96,12 +108,17 @@ export function useInstall() {
     const init = setTimeout(() => {
       let raw = null;
       try {
-        raw = localStorage.getItem(INSTALL_KEY);
+        raw = readMeasurement();
       } catch {
         /* Storage unavailable. */
       }
       const now = Date.now();
-      record.current = readInstallRecord(raw, now);
+      record.current = readInstallRecord(
+        raw,
+        now,
+        measurementAllowed() ? Math.random : () => 0,
+      );
+      record.current.dismissedAt = readDismissal();
       record.current.returnedAfterWeek ||=
         now - record.current.firstSeen >= WEEK;
       record.current.lastSeen = now;
@@ -130,17 +147,36 @@ export function useInstall() {
       setState((s) => ({ ...s, installed: true, available: false }));
     };
     const changed = () => setState((s) => ({ ...s, installed: installed() }));
+    const consentChanged = () => {
+      const now = Date.now();
+      record.current = readInstallRecord(
+        readMeasurement(),
+        now,
+        measurementAllowed() ? Math.random : () => 0,
+      );
+      record.current.dismissedAt = readDismissal();
+      setState((s) => ({
+        ...s,
+        variant: record.current!.variant,
+        eligible: canOffer(record.current!, now),
+      }));
+    };
+    window.addEventListener(CONSENT_EVENT, consentChanged);
+    window.addEventListener("storage", consentChanged);
     window.addEventListener("beforeinstallprompt", before);
     window.addEventListener("appinstalled", complete);
     media.addEventListener("change", changed);
     return () => {
       clearTimeout(init);
+      window.removeEventListener(CONSENT_EVENT, consentChanged);
+      window.removeEventListener("storage", consentChanged);
       window.removeEventListener("beforeinstallprompt", before);
       window.removeEventListener("appinstalled", complete);
       media.removeEventListener("change", changed);
     };
   }, []);
   function dismiss() {
+    saveDismissal();
     if (record.current) record.current.dismissedAt = Date.now();
     track("dismissed");
     setState((s) => ({ ...s, eligible: false }));

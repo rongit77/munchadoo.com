@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { SiteControls } from "./site-controls";
 export const viewport: Viewport = { themeColor: "#27352a" };
 export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "Munchadoo", statusBarStyle: "default" },
@@ -13,7 +14,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="he" dir="rtl">
-      <body>{children}</body>
+      <body>
+        <a href="#main-content" className="skip-link">
+          <span className="only-he">דילוג לתוכן הראשי</span>
+          <span className="only-en">Skip to main content</span>
+        </a>
+        {children}
+        <SiteControls />
+      </body>
     </html>
   );
 }

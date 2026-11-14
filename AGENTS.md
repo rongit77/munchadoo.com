@@ -2,7 +2,7 @@
 
 ## Start here
 
-Read README.md, docs/MVP.md, docs/DECISIONS.md and docs/BACKLOG.md. This repository contains a runnable Next.js prototype with an explicit demo provider and original shared-device games. Do not claim setup, tests, integrations or deployments exist until verified.
+Read README.md, docs/MVP.md, docs/DECISIONS.md and docs/BACKLOG.md. This repository contains a runnable Next.js local pilot with Google Places, fixture tests, PWA installation and original shared-device games. Do not claim setup, tests, integrations or deployments exist until verified.
 
 ## Product requirements
 
@@ -19,6 +19,13 @@ Build a playful restaurant decision experience for families, couples, friends an
 - No unrequested subscriptions, paid infrastructure, public deployment, DNS changes or open-source license selection.
 - Check official documentation before choosing current dependency versions. Pin dependencies and commit the lockfile when scaffolding.
 - Keep code identifiers in English; explain progress to this user in Hebrew unless asked otherwise.
+
+## Privacy and accessibility
+
+- Optional measurement must remain behind valid opt-in, with revocation and deletion. Do not add third-party scripts, fonts, cookies or tracking without updating consent and privacy disclosures.
+- Keep policies consistent with actual data flows. Clickabily / info@clickabily.com were provided by the user; no other operator identifiers are verified.
+- Preserve keyboard access, visible focus, contrast, text scaling and reduced motion. Never claim legal immunity or full accessibility certification without evidence.
+- Read docs/PRIVACY-ACCESSIBILITY-REVIEW.md before public-launch work.
 
 ## Verification and handoff
 

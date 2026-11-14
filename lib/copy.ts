@@ -11,7 +11,8 @@ export const copy = {
     noChoose: "בלי ״מה שבא לך״",
     artCaption: "מישהו אמר אוכל?",
     rules: "הביס שלכם, הכללים שלכם",
-    demoArea: "מיקום החיפוש נשלח ל־Google למציאת מסעדות",
+    demoArea:
+      "המיקום נשלח ל־Munchadoo ול־Google לחיפוש בלבד. אין חובה למסור מיקום; אפשר לבחור אזור.",
     cuisineLabel: "סוג מטבח",
     waitTag: "החלק הכי כיף בהמתנה",
     discover: "מוצאים משהו טעים",
@@ -121,7 +122,8 @@ export const copy = {
     noChoose: "No more “you choose”",
     artCaption: "Did someone say food?",
     rules: "Your bite. Your rules.",
-    demoArea: "Search location is sent to Google to find places",
+    demoArea:
+      "Location is sent to Munchadoo and Google for search. It is optional; you can choose an area instead.",
     cuisineLabel: "Cuisine",
     waitTag: "THE GOOD PART OF WAITING",
     discover: "Find a bite",
