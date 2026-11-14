@@ -266,7 +266,9 @@ export default function Home() {
         if (savedDevice) saveLocation(point, position.coords.accuracy);
         setCenter(point);
         setArea("device");
-        setLocationQuery("");
+        setLocationQuery(
+          locale === "he" ? "המיקום הנוכחי שלי" : "My current location",
+        );
         setDeviceDetails({
           point,
           accuracy: position.coords.accuracy,
@@ -285,15 +287,27 @@ export default function Home() {
               pending: false,
             });
             if (address) setLocationQuery(address);
+            else
+              setLocationMessage(
+                locale === "he"
+                  ? "המיקום זוהה, אך לא התקבלה כתובת. החיפוש משתמש במיקום שזוהה."
+                  : "Location found, but no address was returned. Search uses your detected location.",
+              );
           })
           .catch(() => {
-            if (request === locationEpoch.current)
+            if (request === locationEpoch.current) {
+              setLocationMessage(
+                locale === "he"
+                  ? "המיקום זוהה, אך לא התקבלה כתובת. החיפוש משתמש במיקום שזוהה."
+                  : "Location found, but no address was returned. Search uses your detected location.",
+              );
               setDeviceDetails({
                 point,
                 accuracy: position.coords.accuracy,
                 address: null,
                 pending: false,
               });
+            }
           });
       },
       (e) => {
@@ -535,6 +549,15 @@ export default function Home() {
                       <LocateFixed size={23} />
                     </button>
                   </div>
+                  {area === "device" &&
+                    deviceDetails?.pending &&
+                    !editingLocation && (
+                      <span className="field-hint" role="status">
+                        {locale === "he"
+                          ? "מזהים את הכתובת…"
+                          : "Finding your address…"}
+                      </span>
+                    )}
                   {locationBusy && (
                     <span className="field-hint" role="status">
                       {t.locating}
