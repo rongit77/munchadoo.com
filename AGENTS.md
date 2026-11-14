@@ -2,7 +2,7 @@
 
 ## Start here
 
-Read README.md, docs/MVP.md, docs/DECISIONS.md and docs/BACKLOG.md. This repository currently contains planning documents, not a runnable application. Do not claim setup, tests, integrations or deployments exist until verified.
+Read README.md, docs/MVP.md, docs/DECISIONS.md and docs/BACKLOG.md. This repository contains a runnable Next.js prototype with an explicit demo provider and original shared-device games. Do not claim setup, tests, integrations or deployments exist until verified.
 
 ## Product requirements
 
@@ -25,3 +25,13 @@ Build a playful restaurant decision experience for families, couples, friends an
 For the app scaffold, add real install/dev/lint/typecheck/test/build commands to README.md and CI. Test meaningful behaviors: radius edges, deduplication, open/closed/unknown, timezone boundaries, empty results, previous winner exclusion, provider failures, permission denial and RTL flows. Do not invent passing test results or add hollow tests for prose changes.
 
 Update backlog status only with evidence. Report changed behavior, checks run, outstanding blockers and next step. Product decisions made in ChatGPT must be captured in the repository; project sources are snapshots and do not sync automatically.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
