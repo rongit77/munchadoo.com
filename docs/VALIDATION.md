@@ -50,3 +50,15 @@
 בדפדפן: חלונית התאמה אישית ללא סימון אופציונלי מראש; חיוניים בלבד נשמרו לאחר מעבר/טעינה של עמוד הפרטיות; אישור נבדק בפתיחה חוזרת ובוטל; עמודי פרטיות/אודות והעדפות פעלו בעברית/אנגלית. הגדלת טקסט ל־20px ברמת השורש וניגודיות גבוהה לא יצרו גלילה אופקית ברוחב 863px שנבדק; צמצום תנועה הופעל; main יחיד ויעדי aria-describedby תקינים. סינון DOM בסיסי זיהה ניגודיות נמוכה בכפתור ההגרלה ובתווית האיור ותוקנו הצבעים. נבדקה תמונת המסך במצב מוגדל ובניגודיות גבוהה.
 
 לא בוצעה ביקורת WCAG מלאה, בדיקת קורא מסך אמיתי, סוויטת מקלדת מלאה, בדיקת נייד פיזי או בדיקת 400% zoom. לא ניתן להסיק תאימות משפטית או תו נגישות מהבדיקות. מגבלות אלו מפורטות בהצהרת הנגישות וב־PRIVACY-ACCESSIBILITY-REVIEW.md.
+
+## Namecheap publication — 2026-11-14
+
+SSH key authentication verified to the configured hosting account. Published release
+`20261114T213429Z-428` using `scripts/publish.sh` from the local workstation.
+Lint, typecheck, all 37 tests and isolated production build passed. Remote HTTPS
+certificate validation, home-page response and byte comparison of a compiled JS
+asset passed using the hosting IP explicitly while DNS propagates. Existing cPanel
+environment variables and node_modules were preserved. Backup was created under
+`~/munchadoo-releases/20261114T213429Z-428/backup`. Automatic rollback is implemented
+but has not been fault-injection tested. Live restaurant-provider search was not
+part of this deployment smoke check. macOS tar metadata warnings were non-fatal.

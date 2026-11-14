@@ -42,3 +42,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Namecheap publishing
+
+For an explicit publish/deploy request, use `scripts/publish.sh` with Node 24 from this configured workstation. Do not ask the user to upload ZIP files. SSH credentials and pinned known_hosts are outside the repo in the workspace's work/deploy-access directory; never print or commit the private key. The script refuses changed dependency lockfiles until the server dependencies are installed and verified separately. It backs up runtime files, restarts Passenger, verifies HTTPS and a new build asset, and restores on health-check failure. Report the verified release identifier. No automatic publication on ordinary edits.
