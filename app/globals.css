@@ -1529,3 +1529,79 @@ dialog::backdrop {
   white-space: nowrap;
   color: #5e5e5e;
 }
+
+.install-card {
+  background: #f3f5e7;
+  border: 1px solid #d9dfc6;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 24px 0;
+  text-align: start;
+  color: #27352a;
+}
+.install-intro {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.install-intro .mascot.small {
+  width: 64px;
+  min-width: 64px;
+  height: 64px;
+}
+.install-card h3 {
+  font-size: 19px;
+  line-height: 1.4;
+  margin: 0 0 6px;
+}
+.install-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 6px 0;
+}
+.install-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+.install-actions button {
+  min-height: 44px;
+  white-space: normal;
+}
+.install-guide {
+  border-top: 1px solid #d9dfc6;
+  margin-top: 16px;
+  padding-top: 12px;
+}
+.install-guide > button {
+  float: inline-end;
+  min-width: 44px;
+  min-height: 44px;
+}
+.install-guide li {
+  margin: 10px 0;
+  line-height: 1.6;
+  font-size: 14px;
+}
+.install-guide ol {
+  padding-inline-start: 22px;
+}
+@media (max-width: 480px) {
+  .install-card {
+    padding: 16px;
+  }
+  .install-intro {
+    align-items: flex-start;
+  }
+  .install-intro .mascot.small {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+  }
+  .install-actions .dark-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

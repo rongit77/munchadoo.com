@@ -41,3 +41,11 @@ ADR-001, ADR-002, ADR-003, ADR-005 ו־ADR-006 מיושמים כעת בחלקם:
 מגבלות: 20 קריאות לדקה ו־100 לתהליך. הן אינן תקרת תקציב או הגנה מתאימה לאתר ציבורי. אין עדיין אישור פריסה; נדרשים הגבלת מפתח לשרת, מכסות Google, תנאי שימוש ומדיניות פרטיות ציבוריים, מדיניות תקציב ובדיקת כיסוי לפני פיילוט ציבורי. ייחוס Google Maps מוצג בצמוד לתוצאות ובחלון הזוכה; ייחוס ספק נוסף מוצג אם קיים.
 
 מקורות: [Nearby Search](https://developers.google.com/maps/documentation/places/web-service/nearby-search), [Place Details](https://developers.google.com/maps/documentation/places/web-service/place-details), [Policies](https://developers.google.com/maps/documentation/places/web-service/policies).
+
+## חוויית התקנת PWA
+
+המשתמש אישר הצעה לאחר הצלחה והדרכה לפי מכשיר. ההצעה מופיעה inline אחרי פעולות מסעדה ובסיום משחק, ללא חסימת הניווט וללא הגבלת יכולות למשתמשים שלא מתקינים. לא מבקשים הרשאת notifications. beforeinstallprompt נשמר ומופעל רק בלחיצה ומנוצל פעם אחת. ב־Safari iOS ניתנות הוראות שיתוף והוספה למסך הבית; ביישומים פנימיים ממליצים לפתוח בדפדפן.
+
+ניסוי נוסח נשמר בדפדפן בלבד; לא נבחר ספק analytics. אין עדיין נתוני המרה או חזרה אמיתיים. cooldown שבעה ימים נשמר מקומית; זיהוי standalone מסתיר את ההצעה. Manifest יציב עם id=/, scope=/, start_url=/ ואייקוני הקמע. אין service worker או offline cache: התקנה בדפדפנים תומכים אינה מחייבת עבודה ללא רשת, ומידע מסעדות נשאר חי.
+
+מקורות: [Next.js PWA](https://nextjs.org/docs/app/guides/progressive-web-apps), [Installation prompt](https://web.dev/learn/pwa/installation-prompt).

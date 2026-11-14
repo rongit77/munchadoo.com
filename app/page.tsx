@@ -1,4 +1,5 @@
 "use client";
+import { InstallCard, useInstall } from "./install";
 import { Mascot, FoodArt } from "./illustrations";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -42,6 +43,8 @@ const cuisineIcons: Record<Cuisine, string> = {
   cafe: "☕",
 };
 export default function Home() {
+  const install = useInstall();
+  const [installHelp, setInstallHelp] = useState(false);
   const [locale, setLocale] = useState<Locale>("he");
   const t = copy[locale];
   const [view, setView] = useState<"discover" | "play">("discover");
@@ -686,6 +689,11 @@ export default function Home() {
                   <Mascot small />
                   <h2>{t.done}</h2>
                   <p>{t.doneBody}</p>
+                  <InstallCard
+                    locale={locale}
+                    install={install}
+                    placement="game"
+                  />
                   <button
                     className="dark-button"
                     onClick={() => startGame(game)}
@@ -764,7 +772,27 @@ export default function Home() {
           )}
         </section>
       )}
+      {installHelp && (
+        <div className="shell">
+          <InstallCard
+            locale={locale}
+            install={install}
+            manual
+            placement="footer"
+            onClose={() => setInstallHelp(false)}
+          />
+        </div>
+      )}
       <footer className="shell">
+        {install.state.ready && !install.state.installed && (
+          <button
+            className="text-button"
+            aria-expanded={installHelp}
+            onClick={() => setInstallHelp((v) => !v)}
+          >
+            {locale === "he" ? "הוספה למסך הבית" : "Add to home screen"}
+          </button>
+        )}
         <span dir="ltr" className="footer-logo">
           munchadoo.
         </span>
@@ -870,6 +898,11 @@ export default function Home() {
                 {t.gamesCta}
               </button>
             </div>
+            <InstallCard
+              locale={locale}
+              install={install}
+              placement="restaurant"
+            />
           </div>
         )}
       </dialog>
