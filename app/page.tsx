@@ -424,55 +424,19 @@ export default function Home() {
       <main id="main-content" tabIndex={-1}>
         {view === "discover" ? (
           <>
-            <section className="hero shell">
-              <div className="hero-copy">
-                <p className="eyebrow">
-                  <Sparkles size={15} />
-                  {t.tag}
-                </p>
+            <section className="app-intro shell">
+              <div>
                 <h1>
-                  {t.heroA}
-                  <br />
-                  <span>
-                    {t.heroB}
-                    <svg viewBox="0 0 380 20" aria-hidden="true">
-                      <path
-                        d="M4 14 Q180-2 373 10"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="8"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </span>
+                  {t.heroA} <span>{t.heroB}</span>
                 </h1>
-                <p className="hero-description">{t.intro}</p>
-                <div className="hero-notes">
-                  <span>
-                    <Check size={15} />
-                    {t.noGroup}
-                  </span>
-                  <span>
-                    <Check size={15} />
-                    {t.noChoose}
-                  </span>
-                </div>
+                <p>
+                  {locale === "he"
+                    ? "בוחרים מיקום. מגרילים. אוכלים."
+                    : "Pick a spot. Shuffle. Eat."}
+                </p>
               </div>
-              <div className="hero-art" aria-hidden="true">
-                <div className="orbit orbit-one" />
-                <div className="orbit orbit-two" />
-                <span className="floating-food food-one">🍕</span>
-                <span className="floating-food food-two">🥑</span>
-                <span className="floating-food food-three">🍜</span>
-                <span className="doodle star-one">✳</span>
-                <span className="doodle star-two">✦</span>
-                <div className="mascot-circle">
-                  <Mascot />
-                </div>
-                <div className="speech" dir="ltr">
-                  let’s munch!
-                </div>
-                <div className="art-caption">{t.artCaption}</div>
+              <div className="app-intro-mascot" aria-hidden="true">
+                <Mascot />
               </div>
             </section>
             <section className="picker shell" aria-label={t.discover}>
@@ -664,6 +628,9 @@ export default function Home() {
                         </a>
                       </div>
                     )}
+                    <span id="location-notice" className="field-hint">
+                      {locationBusy ? t.locating : t.demoArea}
+                    </span>{" "}
                   </details>
                   {locationMessage && <p role="status">{locationMessage}</p>}
                   {locationMatches.length > 0 && (
@@ -697,71 +664,77 @@ export default function Home() {
                       </li>
                     </ul>
                   )}
-                  <span id="location-notice" className="field-hint">
-                    {locationBusy ? t.locating : t.demoArea}
-                  </span>
                 </div>
-                <div className="radius-control">
-                  <label htmlFor="radius">
-                    {t.radius}
-                    <strong>
-                      {radius} {t.km}
-                    </strong>
-                  </label>
-                  <input
-                    id="radius"
-                    type="range"
-                    min="1"
-                    max="20"
-                    step="1"
-                    value={radius}
-                    onChange={(e) => {
-                      invalidate();
-                      setRadius(Number(e.target.value));
-                    }}
-                  />
-                  <div className="range-labels">
-                    <span>1 {t.km}</span>
-                    <span>20 {t.km}</span>
+              </div>
+              <details className="search-filters">
+                <summary>
+                  <SlidersHorizontal size={16} />
+                  {locale === "he" ? "סינון והתאמה" : "Filters"} · {radius}{" "}
+                  {t.km} · {cuisine === "all" ? t.any : t[cuisine]}
+                </summary>
+                <div className="controls filter-controls">
+                  <div className="radius-control">
+                    <label htmlFor="radius">
+                      {t.radius}
+                      <strong>
+                        {radius} {t.km}
+                      </strong>
+                    </label>
+                    <input
+                      id="radius"
+                      type="range"
+                      min="1"
+                      max="20"
+                      step="1"
+                      value={radius}
+                      onChange={(e) => {
+                        invalidate();
+                        setRadius(Number(e.target.value));
+                      }}
+                    />
+                    <div className="range-labels">
+                      <span>1 {t.km}</span>
+                      <span>20 {t.km}</span>
+                    </div>
                   </div>
+                  <label className="open-toggle">
+                    <input
+                      type="checkbox"
+                      checked={openOnly}
+                      onChange={(e) => {
+                        invalidate();
+                        setOpenOnly(e.target.checked);
+                      }}
+                    />
+                    <span className="switch" />
+                    <span>
+                      {t.openOnly}
+                      <small>
+                        {locale === "he"
+                          ? "לא מחכים לדלת שתיפתח"
+                          : "No waiting for the doors to open"}
+                      </small>
+                    </span>
+                  </label>
                 </div>
-                <label className="open-toggle">
-                  <input
-                    type="checkbox"
-                    checked={openOnly}
-                    onChange={(e) => {
-                      invalidate();
-                      setOpenOnly(e.target.checked);
-                    }}
-                  />
-                  <span className="switch" />
-                  <span>
-                    {t.openOnly}
-                    <small>
-                      {locale === "he"
-                        ? "לא מחכים לדלת שתיפתח"
-                        : "No waiting for the doors to open"}
-                    </small>
-                  </span>
-                </label>
-              </div>
-              <div className="cuisines" aria-label={t.cuisineLabel}>
-                {(Object.keys(cuisineIcons) as Cuisine[]).map((key) => (
-                  <button
-                    key={key}
-                    aria-pressed={cuisine === key}
-                    className={cuisine === key ? "chip selected" : "chip"}
-                    onClick={() => {
-                      if (cuisine === key) return;
-                      invalidate();
-                      setCuisine(key);
-                    }}
-                  >
-                    <span aria-hidden="true">{cuisineIcons[key]}</span>
-                    {key === "all" ? t.any : t[key]}
-                  </button>
-                ))}
-              </div>
+                <div className="cuisines" aria-label={t.cuisineLabel}>
+                  {(Object.keys(cuisineIcons) as Cuisine[]).map((key) => (
+                    <button
+                      key={key}
+                      aria-pressed={cuisine === key}
+                      className={cuisine === key ? "chip selected" : "chip"}
+                      onClick={() => {
+                        if (cuisine === key) return;
+                        invalidate();
+                        setCuisine(key);
+                      }}
+                    >
+                      <span aria-hidden="true">{cuisineIcons[key]}</span>
+                      {key === "all" ? t.any : t[key]}
+                    </button>
+                  ))}
+                </div>
+              </details>
               {error && (
                 <p role="alert" className="error">
                   {t[error]}
@@ -790,7 +763,39 @@ export default function Home() {
                   {drawing ? t.drawing : t.surprise}
                   <Sparkles size={19} />
                 </button>
-                <p>{openPlaces.length === 1 ? t.one : t.fair}</p>
+                <p role="status">
+                  {loading
+                    ? locale === "he"
+                      ? "מחפשים מסעדות בסביבה…"
+                      : "Searching nearby restaurants…"
+                    : !center
+                      ? t.pickLocation
+                      : !error && !openPlaces.length && places.length > 0
+                        ? locale === "he"
+                          ? `נמצאו ${places.length} מקומות, אך אף אחד מהם לא מסומן כפתוח עכשיו. ההגרלה זמינה רק למקומות פתוחים.`
+                          : `${places.length} places found, but none is confirmed open now. Drawing requires an open place.`
+                        : !error && !places.length
+                          ? locale === "he"
+                            ? "לא נמצאו מקומות מתאימים בתוצאות שהתקבלו. נסו מיקום או סינון אחר."
+                            : "No matching places in the returned results. Try another location or filter."
+                          : openPlaces.length === 1
+                            ? t.one
+                            : t.fair}
+                </p>
+                {!loading && center && !error && !openPlaces.length && (
+                  <p className="field-hint">
+                    {locale === "he"
+                      ? "נבדקות עד 20 תוצאות קרובות — לא כל המסעדות ברדיוס. ביטול מסנן הפתוחות מציג גם סגורות ושעות לא ידועות; הוא אינו מכניס אותן להגרלה."
+                      : "Up to 20 nearby results are checked, not every restaurant in the radius. Turning off Open now shows closed and unknown-hours places, but does not add them to the draw."}
+                  </p>
+                )}
+                {!loading && places.length > 0 && (
+                  <a href="#restaurant-results">
+                    {locale === "he"
+                      ? `לצפייה ב־${places.length} המקומות שנמצאו ↓`
+                      : `View ${places.length} places found ↓`}
+                  </a>
+                )}
                 {drawing && (
                   <button
                     className="text-button"
@@ -804,7 +809,11 @@ export default function Home() {
                 )}
               </div>
             </section>
-            <section className="results shell" aria-busy={loading}>
+            <section
+              id="restaurant-results"
+              className="results shell"
+              aria-busy={loading}
+            >
               <p className="sr-only" role="status">
                 {loading
                   ? locale === "he"

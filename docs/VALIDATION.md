@@ -94,3 +94,16 @@ accuracy, coordinates and optional persistence moved into collapsed details.
 Google attribution shown with predictions; privacy text updated for typing requests.
 Live local-browser test: typed כרכור, selected פרדס חנה כרכור, received one open
 restaurant. Lint/typecheck and 44 unit tests passed. Not yet published.
+
+## App-first screen — 2026-11-15
+
+Replaced the marketing hero with a short heading and small mascot; removed the
+promo strip. Location and draw remain visible while radius/open/cuisine filters
+are collapsed into an accessible details element. Privacy explanation and optional
+location details remain available in the location disclosure. Added explicit
+loading/no-confirmed-open feedback and a results link beside the draw button.
+Visually checked at desktop preview width and in a 390x844 same-origin iframe:
+location input and draw button are visible without scrolling (draw at about 455px).
+Existing consent choice was present; the first-visit consent banner was not part
+of this viewport check. Temporary viewport fixture removed. 44 tests, lint and
+typecheck passed. Changes prepared locally, not published.
