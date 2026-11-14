@@ -1949,3 +1949,45 @@ html[data-high-contrast] button[aria-pressed="true"] {
   border-radius: 0.5rem;
   margin-bottom: 0.3rem;
 }
+.address-bar {
+  display: flex;
+  align-items: center;
+  border: 1px solid #b1b8a7;
+  border-radius: 14px;
+  background: #fff;
+  overflow: visible;
+}
+.address-bar input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  padding: 0.85rem;
+  border-radius: 14px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.location-icon {
+  display: grid;
+  place-items: center;
+  min-width: 48px;
+  min-height: 48px;
+  border: 0;
+  border-inline-start: 1px solid #dfe4d7;
+  background: transparent;
+  color: #273b2e;
+  border-radius: 0 12px 12px 0;
+}
+.location-details {
+  margin-block: 0.35rem;
+  font-size: 0.8125rem;
+  color: #526046;
+}
+.location-details summary {
+  cursor: pointer;
+  padding: 0.35rem 0;
+}
+.location-matches [aria-selected="true"] button {
+  background: #edf3df;
+  outline: 2px solid #526046;
+}

@@ -1,6 +1,8 @@
 import { reverseLocation } from "@/lib/reverse-location";
 import {
   parseSearch,
+  autocompleteGoogle,
+  resolveLocationGoogle,
   locationGoogle,
   PlacesError,
   searchGoogle,
@@ -19,6 +21,18 @@ export async function POST(request: Request) {
     )
       return reply({ error: "forbidden" }, 403);
     const body = await request.json();
+    if (body?.action === "autocomplete")
+      return reply({
+        locations: await autocompleteGoogle(
+          body.query,
+          body.locale,
+          body.token,
+        ),
+      });
+    if (body?.action === "resolve-location")
+      return reply({
+        point: await resolveLocationGoogle(body.id, body.locale, body.token),
+      });
     if (body?.action === "reverse-location")
       return reply({ address: await reverseLocation(body.point, body.locale) });
     if (body?.action === "locations")

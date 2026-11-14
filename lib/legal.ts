@@ -50,7 +50,7 @@ export const legal: Record<"he" | "en", Record<LegalKind, Document>> = {
         {
           heading: "חיפוש מסעדות ומיקום",
           paragraphs: [
-            "כדי לחפש, נשלחים לשרת Munchadoo מיקום מרכז החיפוש, הרדיוס, סוג האוכל והשפה. השרת מעביר ל־Google את המיקום ופרטי החיפוש הדרושים לקבלת מסעדות. בחיפוש עיר או כתובת, הטקסט נשלח לשרת ול־Google כדי להציג מיקומים לבחירה. לאחר בחירה נשלח מרכז המיקום.",
+            "כדי לחפש, נשלחים לשרת Munchadoo מיקום מרכז החיפוש, הרדיוס, סוג האוכל והשפה. השרת מעביר ל־Google את המיקום ופרטי החיפוש הדרושים לקבלת מסעדות. בהקלדת שלושה תווים ומעלה בעיר או כתובת, לאחר הפסקה קצרה, הטקסט נשלח לשרת ול־Google כדי להציג מיקומים לבחירה. לאחר בחירה נשלח מרכז המיקום.",
             "מיקום המכשיר מתבקש רק בלחיצה על ״מצאו אוכל קרוב אליי״ ולאחר הרשאת הדפדפן. מסירתו היא בחירה שלכם ולא חובה: אפשר לבחור אזור ידנית ולהמשיך להשתמש במשחקים. סירוב להרשאה מונע רק את איתור מיקום המכשיר.",
             "אין מעקב מיקום ברקע. אם תבחרו לזכור את מיקום המכשיר, הקואורדינטות, הדיוק וזמן השמירה יישמרו במכשיר לשבעה ימים. ביטול הסימון מוחק את הרשומה. רשומה שפג תוקפה נמחקת בביקור הבא. כתובת שמחזירה Google אינה נשמרת באחסון זה. אין שמירה במסד נתונים או בלוגים ייעודיים. בקשות רשת עשויות לכלול מידע טכני, כגון כתובת IP וסוג הדפדפן, בפני שרת השירות וספקי התקשורת הרלוונטיים.",
           ],
@@ -206,7 +206,7 @@ export const legal: Record<"he" | "en", Record<LegalKind, Document>> = {
         {
           heading: "Search and location",
           paragraphs: [
-            "Search sends the search centre, radius, cuisine and language to the Munchadoo server. The server sends Google the location and search parameters needed to retrieve places. City or address search sends the entered text to our server and Google to return locations for you to choose. Selecting a result uses its centre.",
+            "Search sends the search centre, radius, cuisine and language to the Munchadoo server. The server sends Google the location and search parameters needed to retrieve places. After three or more characters and a brief typing pause, city or address autocomplete sends the entered text to our server and Google to return locations for you to choose. Selecting a result uses its centre.",
             "Device location is requested only when you select “Find food near me” and allow the browser permission. Providing it is voluntary, not mandatory: you can select an area and play games instead. Declining only prevents automatic device positioning.",
             "We do not track location in the background. If you choose to remember device location, coordinates, accuracy and save time are stored on this device for seven days. Unchecking deletes the record; expired records are deleted on the next visit. Google address text is not persisted. No location is saved in a database or dedicated logs. Network requests may expose technical information such as IP address and browser type to the service server and relevant network providers.",
           ],

@@ -207,3 +207,61 @@ export async function locationGoogle(query: unknown, locale: unknown) {
     ];
   });
 }
+
+function validateSession(token: unknown) {
+  if (typeof token !== "string" || !/^[A-Za-z0-9_-]{16,36}$/.test(token))
+    throw new PlacesError("invalid-session", 400);
+  return token;
+}
+export async function autocompleteGoogle(
+  query: unknown,
+  locale: unknown,
+  token: unknown,
+) {
+  const sessionToken = validateSession(token);
+  if (
+    typeof query !== "string" ||
+    query.trim().length < 3 ||
+    query.length > 200 ||
+    !["he", "en"].includes(locale as string)
+  )
+    throw new PlacesError("invalid-location", 400);
+  const data = await google(
+    "places:autocomplete",
+    "suggestions.placePrediction.placeId,suggestions.placePrediction.text.text",
+    { input: query.trim(), languageCode: locale, sessionToken },
+  );
+  return (data.suggestions ?? []).flatMap(
+    (s: {
+      placePrediction?: { placeId?: string; text?: { text?: string } };
+    }) =>
+      s.placePrediction?.placeId && s.placePrediction.text?.text
+        ? [
+            {
+              id: s.placePrediction.placeId,
+              label: s.placePrediction.text.text,
+            },
+          ]
+        : [],
+  );
+}
+export async function resolveLocationGoogle(
+  id: unknown,
+  locale: unknown,
+  token: unknown,
+) {
+  const sessionToken = validateSession(token);
+  if (
+    typeof id !== "string" ||
+    !/^[A-Za-z0-9_-]{1,256}$/.test(id) ||
+    !["he", "en"].includes(locale as string)
+  )
+    throw new PlacesError("invalid-location", 400);
+  const data = await google(
+    `places/${encodeURIComponent(id)}?languageCode=${locale}&sessionToken=${sessionToken}`,
+    "location",
+  );
+  const point = { lat: data.location?.latitude, lng: data.location?.longitude };
+  if (!validPoint(point)) throw new PlacesError("invalid-location", 502);
+  return point;
+}

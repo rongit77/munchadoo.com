@@ -13,7 +13,7 @@ import {
   Globe2,
   Heart,
   MapPin,
-  Navigation,
+  LocateFixed,
   RotateCw,
   Search,
   SlidersHorizontal,
@@ -54,6 +54,9 @@ export default function Home() {
   const [view, setView] = useState<"discover" | "play">("discover");
   const [mode, setMode] = useState<"eat" | "order">("eat");
   const [area, setArea] = useState("");
+  const [editingLocation, setEditingLocation] = useState(false);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
+  const autocompleteToken = useRef("");
   const [locationQuery, setLocationQuery] = useState("");
   const [locationMatches, setLocationMatches] = useState<
     import("@/lib/live-places").LocationMatch[]
@@ -172,42 +175,76 @@ export default function Home() {
     setPlaces([]);
     setError(null);
   };
-  async function findLocation(event: React.FormEvent) {
-    event.preventDefault();
-    if (locationQuery.trim().length < 2) return;
+  useEffect(() => {
+    if (!editingLocation || locationQuery.trim().length < 3) return;
+    const controller = new AbortController();
+    const request = locationEpoch.current;
+    const timer = setTimeout(async () => {
+      setLocationBusy(true);
+      autocompleteToken.current ||= crypto.randomUUID();
+      try {
+        const matches = await liveProvider.autocomplete(
+          locationQuery.trim(),
+          locale,
+          autocompleteToken.current,
+          controller.signal,
+        );
+        if (!controller.signal.aborted && request === locationEpoch.current) {
+          setLocationMatches(matches);
+          setActiveSuggestion(-1);
+          setLocationMessage(matches.length ? "" : t.noLocations);
+        }
+      } catch {
+        if (!controller.signal.aborted && request === locationEpoch.current)
+          setLocationMessage(t.locationFailed);
+      } finally {
+        if (!controller.signal.aborted && request === locationEpoch.current)
+          setLocationBusy(false);
+      }
+    }, 500);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [editingLocation, locationQuery, locale, t.noLocations, t.locationFailed]);
+  async function chooseLocation(
+    match: import("@/lib/live-places").LocationMatch,
+  ) {
     const request = ++locationEpoch.current;
+    setEditingLocation(false);
     setLocationBusy(true);
-    setLocationMessage("");
     setLocationMatches([]);
     try {
-      const matches = await liveProvider.locations(
-        locationQuery.trim(),
-        locale,
-      );
+      const point =
+        match.point ??
+        (await liveProvider.resolveLocation(
+          match.id,
+          locale,
+          autocompleteToken.current,
+        ));
       if (request !== locationEpoch.current) return;
-      setLocationMatches(matches);
-      if (!matches.length) setLocationMessage(t.noLocations);
+      invalidate();
+      clearLocation();
+      setSavedDevice(false);
+      setLocationRestored(false);
+      setDeviceDetails(null);
+      setCenter(point);
+      setArea(match.label);
+      setLocationQuery(match.label);
+      setLocationMessage("");
     } catch {
       if (request === locationEpoch.current)
         setLocationMessage(t.locationFailed);
     } finally {
-      if (request === locationEpoch.current) setLocationBusy(false);
+      if (request === locationEpoch.current) {
+        setLocationBusy(false);
+        autocompleteToken.current = "";
+      }
     }
   }
-  function chooseLocation(match: import("@/lib/live-places").LocationMatch) {
-    locationEpoch.current++;
-    invalidate();
-    clearLocation();
-    setSavedDevice(false);
-    setLocationRestored(false);
-    setDeviceDetails(null);
-    setCenter(match.point);
-    setArea(match.label);
-    setLocationMatches([]);
-    setLocationMessage("");
-    setLocationBusy(false);
-  }
   function locate() {
+    setEditingLocation(false);
+    autocompleteToken.current = "";
     if (!navigator.geolocation) {
       setError("unavailable");
       return;
@@ -470,127 +507,179 @@ export default function Home() {
                     <MapPin size={16} />
                     {t.location}
                   </label>
-                  <button
-                    className="secondary location-device"
-                    onClick={locate}
-                    disabled={locationBusy}
-                    aria-describedby="location-notice"
-                  >
-                    <Navigation size={18} />{" "}
-                    {locationBusy ? t.locating : t.locate}
-                  </button>
-                  <form className="area-line" onSubmit={findLocation}>
+                  <div className="address-bar">
                     <input
                       id="area"
+                      role="combobox"
+                      aria-autocomplete="list"
+                      aria-expanded={locationMatches.length > 0}
+                      aria-controls="address-suggestions"
+                      aria-activedescendant={
+                        activeSuggestion >= 0 &&
+                        locationMatches[activeSuggestion]
+                          ? `address-option-${activeSuggestion}`
+                          : undefined
+                      }
+                      autoComplete="off"
                       value={locationQuery}
                       maxLength={200}
-                      placeholder={t.locationPlaceholder}
+                      placeholder={
+                        area === "device" ? t.device : t.locationPlaceholder
+                      }
                       onChange={(e) => {
                         locationEpoch.current++;
+                        setEditingLocation(true);
                         setLocationBusy(false);
                         setLocationMatches([]);
+                        setActiveSuggestion(-1);
                         setLocationMessage("");
                         setLocationQuery(e.target.value);
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") {
+                          setEditingLocation(false);
+                          setLocationMatches([]);
+                          setActiveSuggestion(-1);
+                        }
+                        if (e.key === "ArrowDown") {
+                          e.preventDefault();
+                          setActiveSuggestion((v) =>
+                            Math.min(v + 1, locationMatches.length - 1),
+                          );
+                        }
+                        if (e.key === "ArrowUp") {
+                          e.preventDefault();
+                          setActiveSuggestion((v) => Math.max(v - 1, 0));
+                        }
+                        if (e.key === "Enter" && locationMatches.length) {
+                          e.preventDefault();
+                          void chooseLocation(
+                            locationMatches[Math.max(0, activeSuggestion)],
+                          );
+                        }
+                      }}
                     />
                     <button
-                      className="secondary"
-                      type="submit"
-                      disabled={locationBusy || locationQuery.trim().length < 2}
+                      className="location-icon"
+                      type="button"
+                      onClick={locate}
+                      disabled={locationBusy}
+                      aria-label={t.locate}
+                      title={t.locate}
+                      aria-describedby="location-notice"
                     >
-                      {t.locationSearch}
+                      <LocateFixed size={23} />
                     </button>
-                  </form>
+                  </div>
+                  {locationBusy && (
+                    <span className="field-hint" role="status">
+                      {t.locating}
+                    </span>
+                  )}
                   <p className="field-hint" role="status">
                     {center
                       ? `${t.searchAround} ${area === "device" ? (deviceDetails?.address ?? t.device) : area}`
                       : t.pickLocation}
                   </p>
-                  {area === "device" && deviceDetails && (
-                    <div className="field-hint">
-                      {locationRestored && (
-                        <p role="status">
-                          {locale === "he"
-                            ? "משתמשים במיקום האחרון שנשמר. עברתם מקום? לחצו על קרוב אליי לעדכון."
-                            : "Using your last saved location. Moved? Use Near me to update."}
-                        </p>
-                      )}
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={savedDevice}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              const saved = saveLocation(
-                                deviceDetails.point,
-                                deviceDetails.accuracy,
-                              );
-                              setSavedDevice(saved);
-                              if (!saved)
-                                setLocationMessage(
-                                  locale === "he"
-                                    ? "הדפדפן אינו מאפשר לשמור מיקום."
-                                    : "Your browser could not save the location.",
+                  <details className="location-details">
+                    <summary>
+                      {locale === "he"
+                        ? "פרטי מיקום ושמירה"
+                        : "Location details and storage"}
+                    </summary>
+                    {area === "device" && deviceDetails && (
+                      <div className="field-hint">
+                        {locationRestored && (
+                          <p role="status">
+                            {locale === "he"
+                              ? "משתמשים במיקום האחרון שנשמר. עברתם מקום? לחצו על קרוב אליי לעדכון."
+                              : "Using your last saved location. Moved? Use Near me to update."}
+                          </p>
+                        )}
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={savedDevice}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                const saved = saveLocation(
+                                  deviceDetails.point,
+                                  deviceDetails.accuracy,
                                 );
-                            } else {
-                              clearLocation();
-                              setSavedDevice(false);
-                              setLocationRestored(false);
-                            }
-                          }}
-                        />{" "}
-                        {locale === "he"
-                          ? "זכרו את מיקום המכשיר ל־7 ימים במכשיר הזה"
-                          : "Remember device location for 7 days on this device"}
-                      </label>
-                      {deviceDetails.address && (
-                        <span translate="no">Google Maps</span>
-                      )}
-                    </div>
-                  )}
-                  {area === "device" && deviceDetails && (
-                    <div className="field-hint" role="status">
-                      <p>
-                        {locale === "he"
-                          ? "דיוק משוער:"
-                          : "Estimated accuracy:"}{" "}
-                        {Math.ceil(deviceDetails.accuracy)}{" "}
-                        {locale === "he" ? "מטרים" : "metres"}
-                      </p>
-                      {!deviceDetails.address && (
+                                setSavedDevice(saved);
+                                if (!saved)
+                                  setLocationMessage(
+                                    locale === "he"
+                                      ? "הדפדפן אינו מאפשר לשמור מיקום."
+                                      : "Your browser could not save the location.",
+                                  );
+                              } else {
+                                clearLocation();
+                                setSavedDevice(false);
+                                setLocationRestored(false);
+                              }
+                            }}
+                          />{" "}
+                          {locale === "he"
+                            ? "זכרו את מיקום המכשיר ל־7 ימים במכשיר הזה"
+                            : "Remember device location for 7 days on this device"}
+                        </label>
+                        {deviceDetails.address && (
+                          <span translate="no">Google Maps</span>
+                        )}
+                      </div>
+                    )}
+                    {area === "device" && deviceDetails && (
+                      <div className="field-hint" role="status">
                         <p>
-                          {deviceDetails.pending
-                            ? locale === "he"
-                              ? "מזהים את שם המקום…"
-                              : "Finding the address…"
-                            : locale === "he"
-                              ? "המיקום זוהה, אך שם הכתובת אינו זמין. החיפוש מתבצע סביב הנקודה הזו:"
-                              : "Location found, but the address is unavailable. Searching around this point:"}{" "}
-                          <bdi>
-                            {deviceDetails.point.lat.toFixed(5)},{" "}
-                            {deviceDetails.point.lng.toFixed(5)}
-                          </bdi>
+                          {locale === "he"
+                            ? "דיוק משוער:"
+                            : "Estimated accuracy:"}{" "}
+                          {Math.ceil(deviceDetails.accuracy)}{" "}
+                          {locale === "he" ? "מטרים" : "metres"}
                         </p>
-                      )}
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${deviceDetails.point.lat},${deviceDetails.point.lng}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {locale === "he"
-                          ? "בדיקת המיקום במפה"
-                          : "Check location on map"}
-                      </a>
-                    </div>
-                  )}
+                        {!deviceDetails.address && (
+                          <p>
+                            {deviceDetails.pending
+                              ? locale === "he"
+                                ? "מזהים את שם המקום…"
+                                : "Finding the address…"
+                              : locale === "he"
+                                ? "המיקום זוהה, אך שם הכתובת אינו זמין. החיפוש מתבצע סביב הנקודה הזו:"
+                                : "Location found, but the address is unavailable. Searching around this point:"}{" "}
+                            <bdi>
+                              {deviceDetails.point.lat.toFixed(5)},{" "}
+                              {deviceDetails.point.lng.toFixed(5)}
+                            </bdi>
+                          </p>
+                        )}
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${deviceDetails.point.lat},${deviceDetails.point.lng}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {locale === "he"
+                            ? "בדיקת המיקום במפה"
+                            : "Check location on map"}
+                        </a>
+                      </div>
+                    )}
+                  </details>
                   {locationMessage && <p role="status">{locationMessage}</p>}
                   {locationMatches.length > 0 && (
                     <ul
                       className="location-matches"
+                      id="address-suggestions"
+                      role="listbox"
                       aria-label={t.locationResults}
                     >
-                      {locationMatches.map((match) => (
-                        <li key={match.id}>
+                      {locationMatches.map((match, index) => (
+                        <li
+                          key={match.id}
+                          role="option"
+                          aria-selected={activeSuggestion === index}
+                          id={`address-option-${index}`}
+                        >
                           <button
                             type="button"
                             onClick={() => chooseLocation(match)}
@@ -599,6 +688,13 @@ export default function Home() {
                           </button>
                         </li>
                       ))}
+                      <li
+                        role="presentation"
+                        className="field-hint"
+                        translate="no"
+                      >
+                        Google Maps
+                      </li>
                     </ul>
                   )}
                   <span id="location-notice" className="field-hint">

@@ -82,3 +82,15 @@ Optional device-coordinate storage expires after 7 days, purged on next read;
 unchecking removes it. Restore does not call geocoding. Google address strings
 are not persisted. Address lookup failure preserves device-coordinate search.
 Actual phone positioning and storage across physical-device restarts remain untested.
+
+## Compact address autocomplete — 2026-11-15
+
+Replaced location/search buttons with one address combobox and a crosshair device
+location button. Provider-backed predictions start after 3 characters and 500ms
+idle; abort and epoch guards discard obsolete responses. Autocomplete and the
+selected Place Details call share a session token; coordinates are fetched only
+for the selected suggestion. Arrow keys, Enter and Escape supported. Device
+accuracy, coordinates and optional persistence moved into collapsed details.
+Google attribution shown with predictions; privacy text updated for typing requests.
+Live local-browser test: typed כרכור, selected פרדס חנה כרכור, received one open
+restaurant. Lint/typecheck and 44 unit tests passed. Not yet published.

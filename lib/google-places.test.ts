@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   mapPlace,
+  autocompleteGoogle,
+  resolveLocationGoogle,
   locationGoogle,
   openingStatus,
   parseSearch,
@@ -136,22 +138,20 @@ it("validates location queries before contacting the provider", async () => {
 });
 it("returns selectable global locations and drops missing or invalid coordinates", async () => {
   vi.stubEnv("GOOGLE_PLACES_API_KEY", "test-key");
-  const fetcher = vi
-    .fn()
-    .mockResolvedValue(
-      Response.json({
-        places: [
-          {
-            id: "london",
-            displayName: { text: "London" },
-            formattedAddress: "UK",
-            location: { latitude: 51.5, longitude: -0.12 },
-          },
-          { id: "missing" },
-          { id: "bad", location: { latitude: 100, longitude: 0 } },
-        ],
-      }),
-    );
+  const fetcher = vi.fn().mockResolvedValue(
+    Response.json({
+      places: [
+        {
+          id: "london",
+          displayName: { text: "London" },
+          formattedAddress: "UK",
+          location: { latitude: 51.5, longitude: -0.12 },
+        },
+        { id: "missing" },
+        { id: "bad", location: { latitude: 100, longitude: 0 } },
+      ],
+    }),
+  );
   vi.stubGlobal("fetch", fetcher);
   expect(await locationGoogle(" London ", "en")).toEqual([
     { id: "london", label: "London · UK", point: { lat: 51.5, lng: -0.12 } },
@@ -162,4 +162,41 @@ it("returns selectable global locations and drops missing or invalid coordinates
     languageCode: "en",
     pageSize: 5,
   });
+});
+
+it("autocomplete validates input and shares its session with the selected place", async () => {
+  vi.stubEnv("GOOGLE_PLACES_API_KEY", "test-key");
+  const token = "a1234567-1234-1234-1234-123456789012";
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(
+      Response.json({
+        suggestions: [
+          {
+            placePrediction: {
+              placeId: "example",
+              text: { text: "Example address" },
+            },
+          },
+        ],
+      }),
+    )
+    .mockResolvedValueOnce(
+      Response.json({ location: { latitude: 32, longitude: 34 } }),
+    );
+  vi.stubGlobal("fetch", fetcher);
+  await expect(autocompleteGoogle("ab", "en", token)).rejects.toThrow(
+    "invalid-location",
+  );
+  expect(fetcher).not.toHaveBeenCalled();
+  expect(await autocompleteGoogle("example", "en", token)).toEqual([
+    { id: "example", label: "Example address" },
+  ]);
+  expect(JSON.parse(fetcher.mock.calls[0][1].body).sessionToken).toBe(token);
+  expect(await resolveLocationGoogle("example", "en", token)).toEqual({
+    lat: 32,
+    lng: 34,
+  });
+  expect(fetcher.mock.calls[1][0]).toContain(`sessionToken=${token}`);
+  expect(fetcher.mock.calls[1][1].headers["X-Goog-FieldMask"]).toBe("location");
 });

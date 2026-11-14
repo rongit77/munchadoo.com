@@ -14,9 +14,27 @@ async function request(body: unknown, signal?: AbortSignal) {
 export type LocationMatch = {
   id: string;
   label: string;
-  point: { lat: number; lng: number };
+  point?: { lat: number; lng: number };
 };
 export const liveProvider = {
+  async autocomplete(
+    query: string,
+    locale: Locale,
+    token: string,
+    signal?: AbortSignal,
+  ): Promise<LocationMatch[]> {
+    return (
+      await request({ action: "autocomplete", query, locale, token }, signal)
+    ).locations;
+  },
+  async resolveLocation(
+    id: string,
+    locale: Locale,
+    token: string,
+  ): Promise<{ lat: number; lng: number }> {
+    return (await request({ action: "resolve-location", id, locale, token }))
+      .point;
+  },
   async reverseLocation(
     point: { lat: number; lng: number },
     locale: Locale,
