@@ -22,7 +22,6 @@ import {
   X,
 } from "lucide-react";
 import {
-  areas,
   choosePlace,
   distanceKm,
   type Cuisine,
@@ -49,13 +48,18 @@ export default function Home() {
   const t = copy[locale];
   const [view, setView] = useState<"discover" | "play">("discover");
   const [mode, setMode] = useState<"eat" | "order">("eat");
-  const [area, setArea] = useState(areas[0].id);
-  const [center, setCenter] = useState<Point>(areas[0].point);
+  const [area, setArea] = useState("");
+  const [locationQuery, setLocationQuery] = useState("");
+  const [locationMatches, setLocationMatches] = useState<
+    import("@/lib/live-places").LocationMatch[]
+  >([]);
+  const [locationMessage, setLocationMessage] = useState("");
+  const [center, setCenter] = useState<Point | null>(null);
   const [radius, setRadius] = useState(3);
   const [cuisine, setCuisine] = useState<Cuisine>("all");
   const [openOnly, setOpenOnly] = useState(true);
   const [places, setPlaces] = useState<Place[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [locationBusy, setLocationBusy] = useState(false);
   const [error, setError] = useState<keyof typeof copy.he | null>(null);
@@ -79,6 +83,7 @@ export default function Home() {
     document.documentElement.dir = locale === "he" ? "rtl" : "ltr";
   }, [locale]);
   useEffect(() => {
+    if (!center) return;
     let active = true;
     const controller = new AbortController();
     const timer = setTimeout(() => {
@@ -138,19 +143,40 @@ export default function Home() {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setDrawing(false);
     setWinner(null);
-    setLoading(true);
+    setLoading(Boolean(center));
     setPlaces([]);
     setError(null);
   };
-  function selectArea(value: string) {
-    invalidate();
-    locationEpoch.current++;
-    setLocationBusy(false);
-    const selected = areas.find((a) => a.id === value);
-    if (selected) {
-      setArea(value);
-      setCenter(selected.point);
+  async function findLocation(event: React.FormEvent) {
+    event.preventDefault();
+    if (locationQuery.trim().length < 2) return;
+    const request = ++locationEpoch.current;
+    setLocationBusy(true);
+    setLocationMessage("");
+    setLocationMatches([]);
+    try {
+      const matches = await liveProvider.locations(
+        locationQuery.trim(),
+        locale,
+      );
+      if (request !== locationEpoch.current) return;
+      setLocationMatches(matches);
+      if (!matches.length) setLocationMessage(t.noLocations);
+    } catch {
+      if (request === locationEpoch.current)
+        setLocationMessage(t.locationFailed);
+    } finally {
+      if (request === locationEpoch.current) setLocationBusy(false);
     }
+  }
+  function chooseLocation(match: import("@/lib/live-places").LocationMatch) {
+    locationEpoch.current++;
+    invalidate();
+    setCenter(match.point);
+    setArea(match.label);
+    setLocationMatches([]);
+    setLocationMessage("");
+    setLocationBusy(false);
   }
   function locate() {
     if (!navigator.geolocation) {
@@ -158,6 +184,8 @@ export default function Home() {
       return;
     }
     setLocationBusy(true);
+    setLocationMatches([]);
+    setLocationMessage("");
     setError(null);
     const request = ++locationEpoch.current;
     navigator.geolocation.getCurrentPosition(
@@ -178,7 +206,7 @@ export default function Home() {
         );
         setLocationBusy(false);
       },
-      { timeout: 8000, maximumAge: 60000 },
+      { timeout: 15000, maximumAge: 30000, enableHighAccuracy: true },
     );
   }
   async function draw() {
@@ -382,33 +410,60 @@ export default function Home() {
                     <MapPin size={16} />
                     {t.location}
                   </label>
-                  <div className="area-line">
-                    <select
+                  <button
+                    className="secondary location-device"
+                    onClick={locate}
+                    disabled={locationBusy}
+                    aria-describedby="location-notice"
+                  >
+                    <Navigation size={18} />{" "}
+                    {locationBusy ? t.locating : t.locate}
+                  </button>
+                  <form className="area-line" onSubmit={findLocation}>
+                    <input
                       id="area"
-                      value={area}
-                      aria-label={t.chooseArea}
-                      onChange={(e) => selectArea(e.target.value)}
-                    >
-                      {areas.map((a) => (
-                        <option key={a.id} value={a.id}>
-                          {a.name[locale]}
-                        </option>
-                      ))}
-                      {area === "device" && (
-                        <option value="device">{t.device}</option>
-                      )}
-                    </select>
+                      value={locationQuery}
+                      maxLength={200}
+                      placeholder={t.locationPlaceholder}
+                      onChange={(e) => {
+                        locationEpoch.current++;
+                        setLocationBusy(false);
+                        setLocationMatches([]);
+                        setLocationMessage("");
+                        setLocationQuery(e.target.value);
+                      }}
+                    />
                     <button
-                      className="locate"
-                      onClick={locate}
-                      disabled={locationBusy}
-                      title={t.locate}
-                      aria-label={t.locate}
-                      aria-describedby="location-notice"
+                      className="secondary"
+                      type="submit"
+                      disabled={locationBusy || locationQuery.trim().length < 2}
                     >
-                      <Navigation size={18} />
+                      {t.locationSearch}
                     </button>
-                  </div>
+                  </form>
+                  <p className="field-hint" role="status">
+                    {center
+                      ? `${t.searchAround} ${area === "device" ? t.device : area}`
+                      : t.pickLocation}
+                  </p>
+                  {locationMessage && <p role="status">{locationMessage}</p>}
+                  {locationMatches.length > 0 && (
+                    <ul
+                      className="location-matches"
+                      aria-label={t.locationResults}
+                    >
+                      {locationMatches.map((match) => (
+                        <li key={match.id}>
+                          <button
+                            type="button"
+                            onClick={() => chooseLocation(match)}
+                          >
+                            {match.label}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                   <span id="location-notice" className="field-hint">
                     {locationBusy ? t.locating : t.demoArea}
                   </span>
@@ -480,6 +535,10 @@ export default function Home() {
                   <button
                     className="secondary"
                     onClick={() => {
+                      if (!center) {
+                        document.getElementById("area")?.focus();
+                        return;
+                      }
                       invalidate();
                       setRefresh((n) => n + 1);
                     }}
@@ -575,7 +634,7 @@ export default function Home() {
                           <span>·</span>
                           {new Intl.NumberFormat(locale, {
                             maximumFractionDigits: 1,
-                          }).format(distanceKm(center, p.point))}{" "}
+                          }).format(distanceKm(center!, p.point))}{" "}
                           {t.km}
                         </p>
                         <span className={`place-status ${p.status}`}>
@@ -597,17 +656,22 @@ export default function Home() {
               ) : error ? null : (
                 <div className="empty">
                   <Search size={36} />
-                  <h3>{t.empty}</h3>
-                  <p>{t.emptyBody}</p>
+                  <h3>{center ? t.empty : t.pickLocation}</h3>
+                  <p>{center ? t.emptyBody : t.locationPlaceholder}</p>
                   <button
                     className="secondary"
                     onClick={() => {
-                      selectArea(areas[0].id);
+                      if (!center) {
+                        document.getElementById("area")?.focus();
+                        return;
+                      }
+                      invalidate();
+                      setRefresh((value) => value + 1);
                       setRadius(3);
                       setCuisine("all");
                     }}
                   >
-                    {t.reset}
+                    {center ? t.reset : t.locationSearch}
                   </button>
                 </div>
               )}
@@ -864,7 +928,7 @@ export default function Home() {
               {winner.street[locale]} ·{" "}
               {new Intl.NumberFormat(locale, {
                 maximumFractionDigits: 1,
-              }).format(distanceKm(center, winner.point))}{" "}
+              }).format(distanceKm(center!, winner.point))}{" "}
               {t.km}
             </p>
             <span className={`place-status ${winner.status}`}>

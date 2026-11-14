@@ -62,3 +62,14 @@ environment variables and node_modules were preserved. Backup was created under
 `~/munchadoo-releases/20261114T213429Z-428/backup`. Automatic rollback is implemented
 but has not been fault-injection tested. Live restaurant-provider search was not
 part of this deployment smoke check. macOS tar metadata warnings were non-fatal.
+
+## Global location selection
+
+Removed the preset-only selector and implicit Tel Aviv centre. Device geolocation
+is explicit and requests high accuracy, with timeout/permission errors retained.
+Added server-side Places Text Search for city/address candidates, selected explicitly
+before restaurant search. No location persistence or background tracking. Privacy
+copy updated for address text. 39 tests, lint, typecheck and production build passed;
+live public-city query for Ra'anana succeeded and candidate selection was exercised
+in the local browser. Actual device positioning/permission denial on phones remains
+unverified. This change is prepared locally, not yet published.

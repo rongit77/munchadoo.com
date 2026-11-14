@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   mapPlace,
+  locationGoogle,
   openingStatus,
   parseSearch,
   searchGoogle,
@@ -74,17 +75,15 @@ describe("Google adapter", () => {
       location: { latitude: 32.074, longitude: 34.775 },
       currentOpeningHours: { openNow: true },
     };
-    const fetcher = vi
-      .fn()
-      .mockResolvedValue(
-        Response.json({
-          places: [
-            place,
-            { ...place, id: "unknown", currentOpeningHours: {} },
-            { ...place, id: "far", location: { latitude: 0, longitude: 0 } },
-          ],
-        }),
-      );
+    const fetcher = vi.fn().mockResolvedValue(
+      Response.json({
+        places: [
+          place,
+          { ...place, id: "unknown", currentOpeningHours: {} },
+          { ...place, id: "far", location: { latitude: 0, longitude: 0 } },
+        ],
+      }),
+    );
     vi.stubGlobal("fetch", fetcher);
     expect((await searchGoogle(query)).map((p) => p.id)).toEqual(["near"]);
     const [url, options] = fetcher.mock.calls[0];
@@ -120,5 +119,47 @@ describe("Google adapter", () => {
       expect(() => takeRequest(minute * 60000)).toThrow("rate-limited");
     }
     expect(() => takeRequest(300000)).toThrow("rate-limited");
+  });
+});
+
+it("validates location queries before contacting the provider", async () => {
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  for (const value of [null, " ", "x".repeat(201)])
+    await expect(locationGoogle(value, "he")).rejects.toThrow(
+      "invalid-location",
+    );
+  await expect(locationGoogle("London", "xx")).rejects.toThrow(
+    "invalid-location",
+  );
+  expect(fetcher).not.toHaveBeenCalled();
+});
+it("returns selectable global locations and drops missing or invalid coordinates", async () => {
+  vi.stubEnv("GOOGLE_PLACES_API_KEY", "test-key");
+  const fetcher = vi
+    .fn()
+    .mockResolvedValue(
+      Response.json({
+        places: [
+          {
+            id: "london",
+            displayName: { text: "London" },
+            formattedAddress: "UK",
+            location: { latitude: 51.5, longitude: -0.12 },
+          },
+          { id: "missing" },
+          { id: "bad", location: { latitude: 100, longitude: 0 } },
+        ],
+      }),
+    );
+  vi.stubGlobal("fetch", fetcher);
+  expect(await locationGoogle(" London ", "en")).toEqual([
+    { id: "london", label: "London · UK", point: { lat: 51.5, lng: -0.12 } },
+  ]);
+  expect(fetcher.mock.calls[0][0]).toContain("places:searchText");
+  expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({
+    textQuery: "London",
+    languageCode: "en",
+    pageSize: 5,
   });
 });

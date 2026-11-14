@@ -172,3 +172,38 @@ export async function statusGoogle(id: string) {
     ),
   );
 }
+
+export async function locationGoogle(query: unknown, locale: unknown) {
+  if (
+    typeof query !== "string" ||
+    query.trim().length < 2 ||
+    query.length > 200 ||
+    !["he", "en"].includes(locale as string)
+  )
+    throw new PlacesError("invalid-location", 400);
+  const data = await google(
+    "places:searchText",
+    "places.id,places.formattedAddress,places.displayName,places.location",
+    {
+      textQuery: query.trim(),
+      languageCode: locale,
+      pageSize: 5,
+    },
+  );
+  return ((data.places ?? []) as GooglePlace[]).flatMap((place) => {
+    const point = {
+      lat: place.location?.latitude,
+      lng: place.location?.longitude,
+    };
+    if (!place.id || !validPoint(point as import("./places").Point)) return [];
+    return [
+      {
+        id: place.id,
+        label: [place.displayName?.text, place.formattedAddress]
+          .filter(Boolean)
+          .join(" · "),
+        point,
+      },
+    ];
+  });
+}

@@ -11,7 +11,15 @@ async function request(body: unknown, signal?: AbortSignal) {
   if (!response.ok) throw new Error(data.error ?? "provider-unavailable");
   return data;
 }
+export type LocationMatch = {
+  id: string;
+  label: string;
+  point: { lat: number; lng: number };
+};
 export const liveProvider = {
+  async locations(query: string, locale: Locale): Promise<LocationMatch[]> {
+    return (await request({ action: "locations", query, locale })).locations;
+  },
   async search(
     query: Search & { locale: Locale },
     signal?: AbortSignal,

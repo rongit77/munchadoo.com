@@ -1,5 +1,6 @@
 import {
   parseSearch,
+  locationGoogle,
   PlacesError,
   searchGoogle,
   statusGoogle,
@@ -17,6 +18,10 @@ export async function POST(request: Request) {
     )
       return reply({ error: "forbidden" }, 403);
     const body = await request.json();
+    if (body?.action === "locations")
+      return reply({
+        locations: await locationGoogle(body.query, body.locale),
+      });
     if (body?.action === "status") {
       if (typeof body.id !== "string") throw new PlacesError("invalid-id", 400);
       return reply({ status: await statusGoogle(body.id) });
