@@ -23,13 +23,13 @@ import {
 import {
   areas,
   choosePlace,
-  demoProvider,
   distanceKm,
   type Cuisine,
   type Locale,
   type Place,
   type Point,
 } from "@/lib/places";
+import { liveProvider } from "@/lib/live-places";
 import { copy } from "@/lib/copy";
 import { gameCards, type Audience, type GameType } from "@/lib/games";
 
@@ -53,6 +53,7 @@ export default function Home() {
   const [openOnly, setOpenOnly] = useState(true);
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(0);
   const [locationBusy, setLocationBusy] = useState(false);
   const [error, setError] = useState<keyof typeof copy.he | null>(null);
   const [winner, setWinner] = useState<Place | null>(null);
@@ -76,25 +77,42 @@ export default function Home() {
   }, [locale]);
   useEffect(() => {
     let active = true;
-    demoProvider
-      .search({ center, radius, cuisine, openOnly })
-      .then((data) => {
-        if (active) {
-          setPlaces(data);
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        if (active) {
-          setError("error");
-          setPlaces([]);
-          setLoading(false);
-        }
-      });
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      setError(null);
+      setLoading(true);
+      setPlaces([]);
+      liveProvider
+        .search(
+          { center, radius, cuisine, openOnly, locale },
+          controller.signal,
+        )
+        .then((data) => {
+          if (active) {
+            setPlaces(data);
+            setLoading(false);
+          }
+        })
+        .catch((e) => {
+          if (active) {
+            setError(
+              e.message === "rate-limited"
+                ? "quotaError"
+                : e.message === "provider-access"
+                  ? "accessError"
+                  : "error",
+            );
+            setPlaces([]);
+            setLoading(false);
+          }
+        });
+    }, 600);
     return () => {
+      clearTimeout(timer);
+      controller.abort();
       active = false;
     };
-  }, [center, radius, cuisine, openOnly]);
+  }, [center, radius, cuisine, openOnly, locale, refresh]);
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -118,6 +136,7 @@ export default function Home() {
     setDrawing(false);
     setWinner(null);
     setLoading(true);
+    setPlaces([]);
     setError(null);
   };
   function selectArea(value: string) {
@@ -168,9 +187,12 @@ export default function Home() {
     setDrawing(true);
     setError(null);
     try {
-      const status = await demoProvider.status(selected.id);
+      const status = await liveProvider.status(selected.id);
       if (request !== drawEpoch.current) return;
       if (status !== "open") {
+        setPlaces((current) =>
+          current.map((p) => (p.id === selected.id ? { ...p, status } : p)),
+        );
         setDrawing(false);
         setError("statusChanged");
         return;
@@ -250,7 +272,10 @@ export default function Home() {
           <button
             className="language"
             aria-label={t.language}
-            onClick={() => setLocale(locale === "he" ? "en" : "he")}
+            onClick={() => {
+              invalidate();
+              setLocale(locale === "he" ? "en" : "he");
+            }}
           >
             <Globe2 size={17} />
             {locale === "he" ? "EN" : "עב"}
@@ -442,6 +467,15 @@ export default function Home() {
             {error && (
               <p role="alert" className="error">
                 {t[error]}
+                <button
+                  className="secondary"
+                  onClick={() => {
+                    invalidate();
+                    setRefresh((n) => n + 1);
+                  }}
+                >
+                  {locale === "he" ? "נסו שוב" : "Try again"}
+                </button>
               </p>
             )}
             <div className="draw-row">
@@ -478,7 +512,10 @@ export default function Home() {
                 </h2>
               </div>
               <span className="result-note">
-                {t.demoPlace} · {t.distance}
+                <span className="google-attribution" translate="no">
+                  Google Maps
+                </span>{" "}
+                · {t.distance}
               </span>
             </div>
             {places.length ? (
@@ -495,7 +532,7 @@ export default function Home() {
                   >
                     <div className={`food-panel ${p.color}`}>
                       <FoodArt kind={p.food} />
-                      <span className="food-label">{t.demoPlace}</span>
+                      <span className="food-label">{t.illustration}</span>
                       <span className="card-arrow">
                         <ArrowUpRight size={18} />
                       </span>
@@ -503,10 +540,15 @@ export default function Home() {
                     <div className="card-body">
                       <div className="card-title">
                         <h3>{p.name[locale]}</h3>
-                        <span className="price">{"₪".repeat(p.price)}</span>
+                        <span className="price">
+                          {p.price ? "₪".repeat(p.price) : ""}
+                        </span>
                       </div>
+                      {p.attributions?.map((a, i) => (
+                        <small key={i}>{a.provider}</small>
+                      ))}
                       <p>
-                        {t[p.cuisine]}
+                        {p.cuisine === "all" ? t.restaurant : t[p.cuisine]}
                         <span>·</span>
                         {new Intl.NumberFormat(locale, {
                           maximumFractionDigits: 1,
@@ -759,7 +801,10 @@ export default function Home() {
             </div>
             <h2 id="winner-heading">{winner.name[locale]}</h2>
             <p>
-              {t[winner.cuisine]} · {t.demoPlace}
+              {winner.cuisine === "all" ? t.restaurant : t[winner.cuisine]} ·{" "}
+              <span className="google-attribution" translate="no">
+                Google Maps
+              </span>
             </p>
             <p>
               {winner.street[locale]} ·{" "}
@@ -780,6 +825,25 @@ export default function Home() {
                 ]
               }
             </span>
+            {winner.attributions?.map((a, i) => (
+              <p key={i}>
+                {a.provider}
+                {a.providerUri?.startsWith("https://") && (
+                  <a href={a.providerUri} target="_blank" rel="noreferrer">
+                    {" "}
+                    ↗
+                  </a>
+                )}
+              </p>
+            ))}
+            <a
+              className="secondary"
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(winner.name[locale])}&query_place_id=${encodeURIComponent(winner.id)}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t.mapsLink}
+            </a>
             <div className="winner-note">
               {mode === "order" ? t.noOrder : t.noNavigation}
             </div>

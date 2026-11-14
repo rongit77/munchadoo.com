@@ -5,14 +5,15 @@ export type Point = { lat: number; lng: number };
 export type Place = {
   id: string;
   name: Record<Locale, string>;
-  cuisine: Exclude<Cuisine, "all">;
+  cuisine: Cuisine;
   point: Point;
   status: "open" | "closed" | "unknown";
   street: Record<Locale, string>;
   color: string;
   food: string;
-  price: 1 | 2 | 3;
-  source: "demo";
+  price: 1 | 2 | 3 | null;
+  source: "demo" | "google";
+  attributions?: { provider?: string; providerUri?: string }[];
 };
 export type Search = {
   center: Point;

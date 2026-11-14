@@ -33,3 +33,11 @@ ADR-001, ADR-002, ADR-003, ADR-005 ו־ADR-006 מיושמים כעת בחלקם:
 הגרסאות המדויקות נעולות ב־package-lock.json. Node 24 נבחר לסביבת הפיתוח ול־CI. כלי הבדיקות עודכן ל־Vitest 5.1.0 בעקבות דוח תלויות; override נקודתי ל־minimatch 11.0.1 תחת typescript-estree פותר את ממצא ה־audit. יש לבחון הסרתו כאשר תלויות המקור יכילו את התיקון.
 
 מקורות להכנת השלד: [Next.js installation](https://nextjs.org/docs/app/getting-started/installation), [Vitest migration](https://vitest.dev/guide/migration/).
+
+## Google Places — ניסוי מקומי מאושר
+
+המשתמש הפעיל Places API (New) והגדיר מפתח מקומי לצורך החיבור. Nearby Search עם field mask מוגדר (כולל currentOpeningHours, מדרגת Enterprise), עד 20 תוצאות לפי מרחק. Place Details מאמת openNow לפני הצגת זוכה; לא מחשבים שעות לפי שעון הדפדפן. אין תמונות, ביקורות או מחירים מומצאים, אין אחסון מתמשך של תוכן ספק. נשלחים רק שדות המיקום הנדרשים, ללא לוג קואורדינטות. מפתח בשרת בלבד.
+
+מגבלות: 20 קריאות לדקה ו־100 לתהליך. הן אינן תקרת תקציב או הגנה מתאימה לאתר ציבורי. אין עדיין אישור פריסה; נדרשים הגבלת מפתח לשרת, מכסות Google, תנאי שימוש ומדיניות פרטיות ציבוריים, מדיניות תקציב ובדיקת כיסוי לפני פיילוט ציבורי. ייחוס Google Maps מוצג בצמוד לתוצאות ובחלון הזוכה; ייחוס ספק נוסף מוצג אם קיים.
+
+מקורות: [Nearby Search](https://developers.google.com/maps/documentation/places/web-service/nearby-search), [Place Details](https://developers.google.com/maps/documentation/places/web-service/place-details), [Policies](https://developers.google.com/maps/documentation/places/web-service/policies).
