@@ -1,3 +1,4 @@
+import { reverseLocation } from "@/lib/reverse-location";
 import {
   parseSearch,
   locationGoogle,
@@ -18,6 +19,8 @@ export async function POST(request: Request) {
     )
       return reply({ error: "forbidden" }, 403);
     const body = await request.json();
+    if (body?.action === "reverse-location")
+      return reply({ address: await reverseLocation(body.point, body.locale) });
     if (body?.action === "locations")
       return reply({
         locations: await locationGoogle(body.query, body.locale),

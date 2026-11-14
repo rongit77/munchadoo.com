@@ -17,6 +17,13 @@ export type LocationMatch = {
   point: { lat: number; lng: number };
 };
 export const liveProvider = {
+  async reverseLocation(
+    point: { lat: number; lng: number },
+    locale: Locale,
+  ): Promise<string | null> {
+    return (await request({ action: "reverse-location", point, locale }))
+      .address;
+  },
   async locations(query: string, locale: Locale): Promise<LocationMatch[]> {
     return (await request({ action: "locations", query, locale })).locations;
   },

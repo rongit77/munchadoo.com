@@ -73,3 +73,12 @@ copy updated for address text. 39 tests, lint, typecheck and production build pa
 live public-city query for Ra'anana succeeded and candidate selection was exercised
 in the local browser. Actual device positioning/permission denial on phones remains
 unverified. This change is prepared locally, not yet published.
+
+## Saved device location publication — 2026-11-14
+
+Release `20261114T215436Z-3120` published through SSH. Lint, typecheck,
+43 tests, production build, HTTPS and build-asset verification passed.
+Optional device-coordinate storage expires after 7 days, purged on next read;
+unchecking removes it. Restore does not call geocoding. Google address strings
+are not persisted. Address lookup failure preserves device-coordinate search.
+Actual phone positioning and storage across physical-device restarts remain untested.

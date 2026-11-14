@@ -30,6 +30,11 @@ import {
   type Point,
 } from "@/lib/places";
 import { liveProvider } from "@/lib/live-places";
+import {
+  readLocation,
+  saveLocation,
+  clearLocation,
+} from "@/lib/saved-location";
 import { copy } from "@/lib/copy";
 import { gameCards, type Audience, type GameType } from "@/lib/games";
 
@@ -61,7 +66,15 @@ export default function Home() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [savedDevice, setSavedDevice] = useState(false);
+  const [locationRestored, setLocationRestored] = useState(false);
   const [locationBusy, setLocationBusy] = useState(false);
+  const [deviceDetails, setDeviceDetails] = useState<{
+    point: Point;
+    accuracy: number;
+    address: string | null;
+    pending: boolean;
+  } | null>(null);
   const [error, setError] = useState<keyof typeof copy.he | null>(null);
   const [winner, setWinner] = useState<Place | null>(null);
   const [previous, setPrevious] = useState<string>();
@@ -78,6 +91,18 @@ export default function Home() {
   const drawEpoch = useRef(0);
   const locationEpoch = useRef(0);
   const restoreFocus = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const saved = readLocation();
+    if (saved) {
+      // Restore browser-only storage after hydration; the server cannot read it.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCenter(saved.point);
+      setArea("device");
+      setDeviceDetails({ ...saved, address: null, pending: false });
+      setSavedDevice(true);
+      setLocationRestored(true);
+    }
+  }, []);
   useEffect(() => {
     document.documentElement.lang = locale;
     document.documentElement.dir = locale === "he" ? "rtl" : "ltr";
@@ -172,6 +197,10 @@ export default function Home() {
   function chooseLocation(match: import("@/lib/live-places").LocationMatch) {
     locationEpoch.current++;
     invalidate();
+    clearLocation();
+    setSavedDevice(false);
+    setLocationRestored(false);
+    setDeviceDetails(null);
     setCenter(match.point);
     setArea(match.label);
     setLocationMatches([]);
@@ -192,12 +221,43 @@ export default function Home() {
       (position) => {
         if (request !== locationEpoch.current) return;
         invalidate();
-        setCenter({
+        const point = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-        });
+        };
+        setLocationRestored(false);
+        if (savedDevice) saveLocation(point, position.coords.accuracy);
+        setCenter(point);
         setArea("device");
+        setLocationQuery("");
+        setDeviceDetails({
+          point,
+          accuracy: position.coords.accuracy,
+          address: null,
+          pending: true,
+        });
         setLocationBusy(false);
+        liveProvider
+          .reverseLocation(point, locale)
+          .then((address) => {
+            if (request !== locationEpoch.current) return;
+            setDeviceDetails({
+              point,
+              accuracy: position.coords.accuracy,
+              address,
+              pending: false,
+            });
+            if (address) setLocationQuery(address);
+          })
+          .catch(() => {
+            if (request === locationEpoch.current)
+              setDeviceDetails({
+                point,
+                accuracy: position.coords.accuracy,
+                address: null,
+                pending: false,
+              });
+          });
       },
       (e) => {
         if (request !== locationEpoch.current) return;
@@ -443,9 +503,86 @@ export default function Home() {
                   </form>
                   <p className="field-hint" role="status">
                     {center
-                      ? `${t.searchAround} ${area === "device" ? t.device : area}`
+                      ? `${t.searchAround} ${area === "device" ? (deviceDetails?.address ?? t.device) : area}`
                       : t.pickLocation}
                   </p>
+                  {area === "device" && deviceDetails && (
+                    <div className="field-hint">
+                      {locationRestored && (
+                        <p role="status">
+                          {locale === "he"
+                            ? "משתמשים במיקום האחרון שנשמר. עברתם מקום? לחצו על קרוב אליי לעדכון."
+                            : "Using your last saved location. Moved? Use Near me to update."}
+                        </p>
+                      )}
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={savedDevice}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              const saved = saveLocation(
+                                deviceDetails.point,
+                                deviceDetails.accuracy,
+                              );
+                              setSavedDevice(saved);
+                              if (!saved)
+                                setLocationMessage(
+                                  locale === "he"
+                                    ? "הדפדפן אינו מאפשר לשמור מיקום."
+                                    : "Your browser could not save the location.",
+                                );
+                            } else {
+                              clearLocation();
+                              setSavedDevice(false);
+                              setLocationRestored(false);
+                            }
+                          }}
+                        />{" "}
+                        {locale === "he"
+                          ? "זכרו את מיקום המכשיר ל־7 ימים במכשיר הזה"
+                          : "Remember device location for 7 days on this device"}
+                      </label>
+                      {deviceDetails.address && (
+                        <span translate="no">Google Maps</span>
+                      )}
+                    </div>
+                  )}
+                  {area === "device" && deviceDetails && (
+                    <div className="field-hint" role="status">
+                      <p>
+                        {locale === "he"
+                          ? "דיוק משוער:"
+                          : "Estimated accuracy:"}{" "}
+                        {Math.ceil(deviceDetails.accuracy)}{" "}
+                        {locale === "he" ? "מטרים" : "metres"}
+                      </p>
+                      {!deviceDetails.address && (
+                        <p>
+                          {deviceDetails.pending
+                            ? locale === "he"
+                              ? "מזהים את שם המקום…"
+                              : "Finding the address…"
+                            : locale === "he"
+                              ? "המיקום זוהה, אך שם הכתובת אינו זמין. החיפוש מתבצע סביב הנקודה הזו:"
+                              : "Location found, but the address is unavailable. Searching around this point:"}{" "}
+                          <bdi>
+                            {deviceDetails.point.lat.toFixed(5)},{" "}
+                            {deviceDetails.point.lng.toFixed(5)}
+                          </bdi>
+                        </p>
+                      )}
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${deviceDetails.point.lat},${deviceDetails.point.lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {locale === "he"
+                          ? "בדיקת המיקום במפה"
+                          : "Check location on map"}
+                      </a>
+                    </div>
+                  )}
                   {locationMessage && <p role="status">{locationMessage}</p>}
                   {locationMatches.length > 0 && (
                     <ul
