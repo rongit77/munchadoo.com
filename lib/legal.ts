@@ -2,7 +2,7 @@ export type LegalKind = "about" | "privacy" | "terms" | "accessibility";
 type Section = { heading: string; paragraphs: string[] };
 type Document = { title: string; intro: string; sections: Section[] };
 export const operator = { name: "Clickabily", email: "info@clickabily.com" };
-export const updated = "2026-11-14";
+export const updated = "2026-11-15";
 export const legal: Record<"he" | "en", Record<LegalKind, Document>> = {
   he: {
     about: {
@@ -66,7 +66,7 @@ export const legal: Record<"he" | "en", Record<LegalKind, Document>> = {
           heading: "קוקיז, אחסון מקומי והסכמה",
           paragraphs: [
             "בגרסה הנוכחית קוד האפליקציה משתמש באחסון מקומי בדפדפן (localStorage), ולא בעוגיות פרסום. אין פיקסלים פרסומיים, שירות מדידה חיצוני או גופנים שנטענים מספק חיצוני.",
-            "האחסון החיוני שומר את בחירת הפרטיות שלכם למשך עד 180 יום ואת בקשתכם לדחות הצעות התקנה למשך שבעה ימים. אין צורך לאשר מדידה כדי לחפש, להגריל או לשחק.",
+            "משחק בארקייד, שמירת מועדף או כניסה יוצרים עוגיית התחברות חיונית ל־30 יום. הנתונים נשמרים בשרת Namecheap כל עוד הפרופיל קיים; ניתן למחוק את הפרופיל ואת הנתונים מתוך עמוד הפרופיל. מחיקת עוגייה של אורח עלולה למנוע גישה להתקדמות שלו. רכיב הכניסה של Google נטען רק אחרי בחירה מפורשת בכניסה; Google מעבדת את בקשת ההתחברות לפי מדיניותה. בחירת שפה ידנית נשמרת במכשיר עד שינוי או חזרה להגדרת המכשיר. האחסון החיוני שומר את בחירת הפרטיות שלכם למשך עד 180 יום ואת בקשתכם לדחות הצעות התקנה למשך שבעה ימים. אין צורך לאשר מדידה כדי לחפש, להגריל או לשחק.",
             "רק אם תאשרו מדידה מקומית, נשמור בדפדפן נוסח כפתור התקנה, זמני ביקור ומוני הצגה, לחיצה, אישור בקשת התקנה ופתיחה כאפליקציה. הנתונים אינם נשלחים לשרת, ואינם כוללים מיקום, מסעדות או תשובות במשחק. לחיצה על התקנה אינה נחשבת אוטומטית להתקנה מוצלחת.",
             "אפשר לשנות את הבחירה דרך ״הגדרות פרטיות וקוקיז״ בתחתית כל עמוד. ביטול האישור מוחק את רשומת המדידה המקומית. בתום תקופת ההסכמה, המדידה תיעצר והנתונים יימחקו בביקור או בפעולה הבאים; אם לא חוזרים לאתר, נתוני הדפדפן נותרים עד מחיקה דרך הדפדפן.",
           ],
@@ -74,7 +74,7 @@ export const legal: Record<"he" | "en", Record<LegalKind, Document>> = {
         {
           heading: "משחקים ופניות אלינו",
           paragraphs: [
-            "אין כרגע חשבון משתמש או פרופיל ילד. מצב המשחק והתשובות נשמרים בזיכרון העמוד בלבד ואינם נשלחים לשרת. ילדים יכולים לשחק עם מבוגר בלי למסור פרטים אישיים.",
+            "אפשר לשחק כאורח או להירשם עם Google. נשמרים בשרת מזהה חשבון, שם תצוגה, מזהה Google בהרשמה, מזהי מקומות מועדפים וכינויים שבחרתם, היסטוריית צבירה והשלמות משחקים. סיבובי ארקייד וניחושים מעובדים בשרת; פרטי סיבובים זמניים נמחקים אחרי יום בעת פתיחת סיבוב חדש. במשחקי השאלות הקודמים התשובות נשארות בזיכרון העמוד. אין פרופילים ייעודיים לילדים.",
             "אם תפנו באימייל, נקבל את כתובתכם ואת תוכן הפנייה לצורך מענה וטיפול, וייתכן שנצטרך לשמור תיעוד הדרוש לטיפול בפנייה או לחובות שבדין. הימנעו משליחת מידע רגיש שאינו נחוץ.",
           ],
         },
@@ -96,7 +96,7 @@ export const legal: Record<"he" | "en", Record<LegalKind, Document>> = {
         {
           heading: "המפעילה והשירות",
           paragraphs: [
-            "השירות מופעל על ידי Clickabily. לפניות: info@clickabily.com. השימוש אינו דורש כרגע תשלום או חשבון. שינוי מהותי בתנאים יוצג בעמוד זה; שירות בתשלום, אם יתווסף, ידרוש תנאים והסכמה נפרדים.",
+            "השירות מופעל על ידי Clickabily. לפניות: info@clickabily.com. השימוש אינו דורש תשלום או הרשמה עם Google. Munch Coins הם נקודות משחק בלבד ללא ערך כספי, רכישה, העברה או מימוש. אין פרסים זמינים או הבטחה לשווי עתידי. הצבירה מוגבלת ל־100 מטבעות ביום UTC לכל פרופיל; אין הימור או תשלום על סיבובים. פרסים עתידיים יהיו כפופים לתנאים נפרדים.  שינוי מהותי בתנאים יוצג בעמוד זה; שירות בתשלום, אם יתווסף, ידרוש תנאים והסכמה נפרדים.",
           ],
         },
         {
@@ -222,7 +222,7 @@ export const legal: Record<"he" | "en", Record<LegalKind, Document>> = {
           heading: "Cookies, local storage and consent",
           paragraphs: [
             "Current application code uses browser localStorage, not advertising cookies. There are no advertising pixels, external analytics services or remotely loaded fonts.",
-            "Essential storage keeps your privacy choice for up to 180 days and your request to snooze installation offers for seven days. Optional measurement is not required for search, draws or games.",
+            "Playing arcade games, saving a favorite or signing in creates an essential 30-day session cookie. Data is stored on the Namecheap server while your profile exists; you can delete your profile and data from the profile page. Clearing a guest cookie may remove access to guest progress. Google sign-in code loads only after choosing sign-in; Google processes the sign-in request under its policies. A manual language preference is saved on this device until changed or reset to device language. Essential storage keeps your privacy choice for up to 180 days and your request to snooze installation offers for seven days. Optional measurement is not required for search, draws or games.",
             "Only if you allow local measurement do we save the installation button variant, visit timestamps and counts of offers, clicks, prompt acceptance and standalone launches in this browser. This data is not sent to a server and contains no locations, restaurants or game answers. A click does not automatically mean an installation succeeded.",
             "Use “Privacy & cookie settings” at the bottom of any page to change your choice. Withdrawing deletes the local measurement record. Once consent expires, measurement stops and its record is removed on the next visit or action. If you do not return, browser data remains until removed through your browser.",
           ],
@@ -230,7 +230,7 @@ export const legal: Record<"he" | "en", Record<LegalKind, Document>> = {
         {
           heading: "Games and enquiries",
           paragraphs: [
-            "There are currently no user accounts or child profiles. Game progress and answers stay in page memory and are not sent to a server. Children can play with an adult without submitting personal details.",
+            "Play as a guest or sign in with Google. Our server stores an account ID, display name, Google identifier when registered, favorite place IDs and your chosen nicknames, coin history and game completions. Arcade rounds and guesses are processed on the server; temporary rounds older than one day are removed when a new round starts. Answers in the original question games remain in page memory. We do not offer dedicated child profiles.",
             "If you email us, we receive your address and message to respond and handle your enquiry. Records may be retained as needed to resolve the enquiry or meet legal obligations. Please avoid unnecessary sensitive information.",
           ],
         },
@@ -252,7 +252,7 @@ export const legal: Record<"he" | "en", Record<LegalKind, Document>> = {
         {
           heading: "Operator and service",
           paragraphs: [
-            "The service is operated by Clickabily. Contact info@clickabily.com. No payment or account is currently required. Material changes will be reflected here; any future paid service will require separate terms and agreement.",
+            "The service is operated by Clickabily. Contact info@clickabily.com. No payment or Google registration is required. Munch Coins are play points only, with no cash value, purchases, transfers or redemption. No prizes or future value are promised. Earning is limited to 100 coins per UTC day per profile; rounds involve no stakes or payment. Any future rewards will have separate terms. Material changes will be reflected here; any future paid service will require separate terms and agreement.",
           ],
         },
         {

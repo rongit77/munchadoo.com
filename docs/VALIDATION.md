@@ -107,3 +107,17 @@ location input and draw button are visible without scrolling (draw at about 455p
 Existing consent choice was present; the first-visit consent banner was not part
 of this viewport check. Temporary viewport fixture removed. 44 tests, lint and
 typecheck passed. Changes prepared locally, not published.
+
+## Munch Club local verification — 2026-11-15
+
+- 57 tests pass, including real RSA-signed test JWTs, issuer/audience/expiry/nonce checks, guest upgrade and session rotation/replay rejection; ownership, rollback, earning cap, ten-guess limit, deleted-session rejection and favorites separation.
+- `npm run lint` and `npm run typecheck` passed. Isolated production webpack build passed, including `/profile` and `/api/member`.
+- Headless Chrome, 390×844: guest creation, number guess, wheel and slots, navigation to profile and persisted 20-coin wallet passed; zero page errors and no horizontal overflow. Consent panel dismissed using essential-only choice. Screenshots inspected.
+- Real Google login is NOT verified: awaiting Web Client ID and authorized origins. Local signed-token tests do not replace Google account acceptance testing.
+- SQLite storage, dependency installation and backup configuration on production host are NOT yet changed. This increment is not published.
+
+## Deployment — 2026-11-15
+
+Release `20261115T062954Z-24209`: lint/typecheck/57 tests and webpack production build passed; HTTPS and exact deployed JS asset verified. Production Node v24.22.3 successfully opened SQLite; pinned jose installed. Google Client ID configured on server. SQLite path configured outside the application at `/home/muncicsh/munchadoo-data/club.sqlite`; deployment does not replace member data. Device-language selection and profile override verified locally for he-IL/en-US/fr-FR. Real Google account authentication still requires user acceptance testing; no authenticated Google account was used by the agent.
+
+Live Chrome check on HTTPS passed: new guest, wheel completion, 10 coins persisted after navigating to profile, Google GIS button loaded without origin errors, and explicit test-profile deletion succeeded. No console errors in the successful run. A preceding UI automation run timed out waiting for the delete-confirmation control; a fresh complete run succeeded. Google account popup/consent/login is still not exercised.

@@ -1,29 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useLanguage } from "./use-language";
 import Link from "next/link";
 import { legal, operator, updated, type LegalKind } from "@/lib/legal";
-import type { Locale } from "@/lib/places";
 export function LegalPage({ kind }: { kind: LegalKind }) {
-  const [locale, setLocale] = useState<Locale>("he");
+  const { locale } = useLanguage();
   const content = legal[locale][kind];
   const he = locale === "he";
-  useEffect(() => {
-    document.documentElement.lang = locale;
-    document.documentElement.dir = he ? "rtl" : "ltr";
-  }, [locale, he]);
   return (
     <>
       <header className="legal-header shell">
         <Link href="/" lang="en">
           Munchadoo
         </Link>
-        <button
-          className="secondary"
-          onClick={() => setLocale(he ? "en" : "he")}
-          aria-label={he ? "Switch to English" : "מעבר לעברית"}
-        >
-          {he ? "English" : "עברית"}
-        </button>
+        <Link href="/profile">{he ? "פרופיל ושפה" : "Profile & language"}</Link>
       </header>
       <main id="main-content" tabIndex={-1} className="legal-page shell">
         <h1>{content.title}</h1>

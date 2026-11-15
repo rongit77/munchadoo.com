@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { MemberProvider } from "./member";
 import { SiteControls } from "./site-controls";
 export const viewport: Viewport = { themeColor: "#27352a" };
 export const metadata: Metadata = {
@@ -19,7 +20,7 @@ export default function RootLayout({
           <span className="only-he">דילוג לתוכן הראשי</span>
           <span className="only-en">Skip to main content</span>
         </a>
-        {children}
+        <MemberProvider>{children}</MemberProvider>
         <SiteControls />
       </body>
     </html>

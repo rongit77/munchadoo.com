@@ -55,3 +55,15 @@ ADR-001, ADR-002, ADR-003, ADR-005 ו־ADR-006 מיושמים כעת בחלקם:
 המפעילה כפי שנמסרה: Clickabily; פניות: info@clickabily.com. נוספו עמודי מידע דו־לשוניים ותנאים, קישורי מדיניות Google, הסכמה אופציונלית למדידה מקומית, ביטול ומחיקה, הפרדת snooze חיוני מהמדידה. מדידה מלפני מנגנון ההסכמה נמחקת כשאין הסכמה תקפה. הוסרו גופני Google החיצוניים.
 
 טקסטים נגישים, ניווט מקלדת והודעות מצב משופרים; כלי נגישות משלימים את העבודה בבסיס. לא נטענת עמידה מלאה בתקן. מסמכי המשתמש משקפים את הגרסה הנוכחית; השלמות משפטיות ותפעוליות מתועדות ב־PRIVACY-ACCESSIBILITY-REVIEW.md.
+
+## Munch Club, accounts and arcade — 2026-11-15
+
+User expanded scope to guest/Google registration, profile, favorites, coins, badges and three games. The earlier no-accounts MVP boundary is superseded for this increment.
+
+- SQLite via Node 24 `node:sqlite`, lazy connection, WAL and transactions, stored under `MUNCH_DATABASE_PATH` (default `data/munchadoo.sqlite`). Appropriate for the current single Namecheap host, not horizontal multi-host deployment. Data must remain outside public files and release replacement. `data/` is ignored and excluded from build staging.
+- Google Identity Services with Web client ID, `jose` 6.2.17 signature verification against Google's JWKS. Verify issuer, audience, expiration, issue time and single-use session nonce; do not store Google tokens. No client secret required for this ID-token flow. Script loaded only after sign-in intent. New Google identity upgrades current guest; existing identity loads its established account without transferring guest coins.
+- Opaque random sessions stored hashed, HttpOnly/SameSite=Lax/Secure in production, 30 days. Same-origin JSON mutation endpoints; per-process request throttle. SQLite contains nickname, Google subject if registered, place IDs and user-authored aliases, rounds, ledger. No email/photo persistence or restaurant data copying.
+- Original brick-style figures for the requested LEGO-style slots; no LEGO branding or claimed affiliation. Wheel is interpreted as a separate party challenge game.
+- Coins are non-purchasable, non-transferable play points with no current redemption or monetary value. Fixed 10 points for completing a round (correct number / any wheel or slot result), maximum 100 per UTC day per profile. All random outcomes and credits are server-owned; atomic unique round ledger prevents duplicate credit. Slots never debit coins. Guest resets can circumvent per-profile limits: real prizes must not rely on this pilot system without verified-account eligibility, abuse controls and separate reward terms.
+- Six badges derived from completed rounds and favorite presence. Profile deletion removes account, sessions, rounds, favorites and ledger. Original question games retain their existing local-only behavior and do not award points in this increment.
+- Sources: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token ; https://developers.google.com/identity/gsi/web/guides/display-button ; https://nodejs.org/api/sqlite.html

@@ -176,8 +176,8 @@ export function SiteControls() {
             </h2>
             <p>
               {he
-                ? "אנחנו שומרים את בחירת הפרטיות ואת בקשתכם לדחות הצעות התקנה. מדידה מקומית של השימוש בהתקנה תופעל רק באישורכם. אין כרגע עוגיות פרסום או שירות מדידה חיצוני."
-                : "We store your privacy choice and requests to snooze install offers. Optional local installation measurement runs only with your permission. We currently use no advertising cookies or external analytics."}{" "}
+                ? "אנחנו שומרים את בחירת הפרטיות ואת בקשתכם לדחות הצעות התקנה. משחק ושמירת מועדפים משתמשים בעוגיית התחברות חיונית. מדידה מקומית של השימוש בהתקנה תופעל רק באישורכם. אין כרגע עוגיות פרסום או שירות מדידה חיצוני."
+                : "We store your privacy choice and requests to snooze install offers. Games and favorites use an essential session cookie. Optional local installation measurement runs only with your permission. We currently use no advertising cookies or external analytics."}{" "}
               <Link href="/privacy">
                 {he ? "פרטים במדיניות הפרטיות" : "Read our privacy policy"}
               </Link>

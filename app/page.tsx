@@ -1,4 +1,8 @@
 "use client";
+import Link from "next/link";
+import { useLanguage } from "./use-language";
+import { Arcade } from "./arcade";
+import { FavoriteButton } from "./member";
 import { InstallCard, useInstall } from "./install";
 import { Mascot, FoodArt } from "./illustrations";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +14,6 @@ import {
   Compass,
   Dice5,
   Gamepad2,
-  Globe2,
   Heart,
   MapPin,
   LocateFixed,
@@ -19,13 +22,13 @@ import {
   SlidersHorizontal,
   Sparkles,
   Utensils,
+  UserRound,
   X,
 } from "lucide-react";
 import {
   choosePlace,
   distanceKm,
   type Cuisine,
-  type Locale,
   type Place,
   type Point,
 } from "@/lib/places";
@@ -49,7 +52,7 @@ const cuisineIcons: Record<Cuisine, string> = {
 export default function Home() {
   const install = useInstall();
   const [installHelp, setInstallHelp] = useState(false);
-  const [locale, setLocale] = useState<Locale>("he");
+  const { locale } = useLanguage();
   const t = copy[locale];
   const [view, setView] = useState<"discover" | "play">("discover");
   const [mode, setMode] = useState<"eat" | "order">("eat");
@@ -416,17 +419,16 @@ export default function Home() {
               {t.play}
             </button>
           </nav>
-          <button
-            className="language"
-            aria-label={t.language}
-            onClick={() => {
-              invalidate();
-              setLocale(locale === "he" ? "en" : "he");
-            }}
-          >
-            <Globe2 size={17} />
-            {locale === "he" ? "EN" : "עב"}
-          </button>
+          <div className="header-actions">
+            <Link
+              href="/profile"
+              className="profile-icon"
+              aria-label={locale === "he" ? "הפרופיל שלי" : "My profile"}
+              title={locale === "he" ? "הפרופיל שלי" : "My profile"}
+            >
+              <UserRound size={21} aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </header>
       <div className="demo-strip">
@@ -977,6 +979,7 @@ export default function Home() {
               <span>{t.gamesAccent}</span>
             </h1>
             <p className="games-intro">{t.gamesIntro}</p>
+            <Arcade locale={locale} />
             {!game ? (
               <>
                 <fieldset className="audiences">
@@ -1186,6 +1189,7 @@ export default function Home() {
               <FoodArt kind={winner.food} />
             </div>
             <h2 id="winner-heading">{winner.name[locale]}</h2>
+            <FavoriteButton id={winner.id} locale={locale} />
             <p>
               {winner.cuisine === "all" ? t.restaurant : t[winner.cuisine]} ·{" "}
               <span className="google-attribution" translate="no">

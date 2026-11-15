@@ -18,7 +18,7 @@ fi
 npm run lint
 npm run typecheck
 npm test
-rsync -a --exclude=node_modules --exclude=.next --exclude=.git --exclude='.env*' --exclude='*.tsbuildinfo' "$ROOT/" "$BUILD/"
+rsync -a --exclude=data --exclude=node_modules --exclude=.next --exclude=.git --exclude='.env*' --exclude='*.tsbuildinfo' "$ROOT/" "$BUILD/"
 ln -s "$ROOT/node_modules" "$BUILD/node_modules"
 (cd "$BUILD" && NEXT_TELEMETRY_DISABLED=1 npm run build -- --webpack)
 RELEASE="$(date -u +%Y%m%dT%H%M%SZ)-$$"

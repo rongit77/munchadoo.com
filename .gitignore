@@ -15,3 +15,6 @@ next-env.d.ts
 
 # Local responsive preview only
 /public/previews/
+
+# Private member data
+/data/

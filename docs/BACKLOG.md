@@ -51,3 +51,12 @@ MUN-011 מומש לניסוי מקומי: שרת, validation, timeout, rate limi
 ## MUN-019 — פרטיות, עמודי מידע ונגישות
 
 מומש מקומית: אודות/פרטיות/תנאים/הצהרת נגישות בשתי שפות; פרטי Clickabily; בחירת אחסון אמיתית עם חסימת מדידה, מחיקת מידע legacy וביטול הסכמה; הסרת גופנים חיצוניים; שיפורי מקלדת, תוויות, סטטוסים, ניגודיות והגדלה. נותרו לפני פרסום: אימות פרטי הישות ומדינת רישום, מדיניות תפעולית של ספקי אירוח/אימייל, סקירה משפטית וביקורת נגישות מקצועית במכשירים ובטכנולוגיות מסייעות.
+
+## Munch Club — 15 November 2026
+
+- MUN-020: number guessing (1–100, ten guesses), surprise challenge wheel and original brick-character slots implemented; server-owned outcomes. Browser QA in progress.
+- MUN-021: guest sessions and profile, editable display name, user-named favorite place IDs, wallet/history and six derived badges implemented.
+- MUN-022: Google Identity Services button loaded on demand; server JWT signature/audience/issuer/expiry/nonce validation, rotated opaque session. Pending supplied Web client ID and real Google sign-in acceptance test.
+- MUN-023: SQLite ledger with transactions, one credit per completed round, fixed 10-point credit and 100/day UTC cap, no debit/payment/redemption. Seven store tests pass. Points are pilot play points; valuable rewards require separate anti-abuse and reward-system work.
+- MUN-024: updated privacy/terms and profile deletion implemented. No public deployment in this task.
+- MUN-025: future prizes: intentionally unavailable; no promised conversion of pilot points. Product rules and reward terms still to be defined.
